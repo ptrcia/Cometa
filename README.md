@@ -1,4 +1,4 @@
-# Cometa (https://github.com/ptrcia/cometa)
+# [Cometa](https://github.com/ptrcia/cometa)
  A tiny game about the warmth of friendly company
 =====================================================
 
