@@ -4,13 +4,12 @@ using UnityEngine;
 
 public class PlayerMovement : MonoBehaviour
 {
-    public float speedRot;
-
-    public float maxSpeed;
-    public float acceleration;
-    public float deceleration;
+    [Header("Movement")]
+    [SerializeField] float speedRot;
+    [SerializeField] float maxSpeed;
+    [SerializeField] float acceleration;
+    [SerializeField] float deceleration;
     public float currentSpeed;
-
 
     private void Update()
     {
