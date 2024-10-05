@@ -62,8 +62,7 @@ public class PlayerMovement : MonoBehaviour
         }
 
         // Mover el objeto según la velocidad actual
-        Vector3 velocity = transform.forward * currentSpeed +
-                           transform.right * currentSpeed;
+        Vector3 velocity = transform.forward * currentSpeed;
 
         GetComponent<Rigidbody>().velocity = velocity;
     }

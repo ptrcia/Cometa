@@ -7,11 +7,6 @@ public class CameraFollow : MonoBehaviour
     public GameObject objectToFollow;
     public float cameraDistance = 10.0f;
 
-    // Use this for initialization
-    void Start()
-    {
-    }
-
     void LateUpdate()
     {
         transform.position = objectToFollow.transform.position - objectToFollow.transform.forward * cameraDistance;

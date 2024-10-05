@@ -4,20 +4,16 @@ using UnityEngine;
 
 public class PlanetInteraction : MonoBehaviour
 {
-
-    public enum planetSize{small , medium, large}
-    public planetSize optionPlanetSize;
-
-    [SerializeField] float rotationSpeed;
     [SerializeField] GameObject pivotObject = null;
     [SerializeField] Vector3 directionOfRotation;
-
+    
     public bool isOrbiting = false; // Para saber si el jugador está en órbita
 
     PlayerMovement playerMovement;
     CameraFollow cameraFollow;
     Rigidbody rb;
     EnergyManagement energyManagement;
+    GravityField gravityField;
     
 
     private void Awake()
@@ -26,56 +22,33 @@ public class PlanetInteraction : MonoBehaviour
         cameraFollow = Camera.main.GetComponent<CameraFollow>();
         rb = GetComponent<Rigidbody>();
         energyManagement = GetComponent<EnergyManagement>();
-
+        gravityField = GetComponent<GravityField>();
     }
 
     private void Start()
     {
-        PlanetSize(optionPlanetSize);
-        directionOfRotation = new Vector3(0, 0, 1);
-    }
-
-    public void PlanetSize(planetSize planetSize)
-    {
-        switch (planetSize)
-        {
-            case planetSize.small:
-                rotationSpeed = 50.0f;
-                break;
-            case planetSize.medium:
-                rotationSpeed = 25.0f;
-                break;
-            case planetSize.large:
-                rotationSpeed = 10.0f;
-                break;
-            default:
-                rotationSpeed = 1.0f;
-                break;
-        }
+        directionOfRotation = new Vector3(0, 0, 1);  
     }
 
     private void OnCollisionEnter(Collision collision)
     {
         if (collision.gameObject.CompareTag("Planet"))
         {
-            Debug.Log("Player collision with planet");
+            //Hacer que vaya cambiando la dirección!!!
             GenerateRandomDirection();
 
             pivotObject = collision.gameObject; // Guardar el planeta como objeto pivote
+            Debug.Log("Player collision with: " + pivotObject.transform.parent.name);
+
+            playerMovement.enabled = false;
             playerMovement.currentSpeed = 0;
             
             rb.useGravity = false;
             rb.velocity = Vector3.zero;
 
-            cameraFollow.objectToFollow = pivotObject;
+            //cameraFollow.objectToFollow = pivotObject;  //ya veremos
             
             isOrbiting = true; // Activar estado de orbitar
-        }
-
-        if (collision.gameObject.CompareTag("PlanetAttractionField"))
-        {
-            //pivotObject = collision.gameObject;
-            //añadirle campo de atracion gravitacional
         }
     }
     private void OnCollisionExit(Collision collision)
@@ -83,9 +56,24 @@ public class PlanetInteraction : MonoBehaviour
         if (collision.gameObject.CompareTag("Planet"))
         {
             cameraFollow.objectToFollow = this.gameObject;
+            playerMovement.enabled = true;
 
             pivotObject = null;
             isOrbiting = false;
+        }
+    }
+
+    private void OnTriggerEnter(Collider other)
+    {
+        if (other.gameObject.CompareTag("PlanetAttractionField")) //el collider
+        {
+            //añadirle campo de atracion gravitacional
+            //no funciona
+
+            pivotObject = other.gameObject;
+            //Debug.Log("Player enter the gravity field of the: " + pivotObject.transform.parent.name);
+
+            ProcessGravity();
         }
     }
 
@@ -93,20 +81,39 @@ public class PlanetInteraction : MonoBehaviour
     {
         if (isOrbiting && pivotObject != null)
         {
-            
-            transform.RotateAround(pivotObject.transform.position, directionOfRotation, (rotationSpeed + playerMovement.currentSpeed) * Time.deltaTime);// Rotar alrededor del planeta en cada frame
+            //Debug.Log("Pivote: "+ pivotObject.name + " del " + pivotObject.transform.parent.name);
+
+            transform.RotateAround(pivotObject.transform.position, directionOfRotation, 
+                (pivotObject.transform.parent.GetComponent<GravityField>().rotationSpeed 
+                + playerMovement.currentSpeed)  * Time.deltaTime);// Rotar alrededor del planeta en cada frame
         }
-        else if (isOrbiting && energyManagement.isFullEnergised && Input.GetKeyDown(KeyCode.Space))
+
+        if (isOrbiting && energyManagement.isFullEnergised)
         {
-            Debug.Log("Space has been pressed");
-            //no funciona
-
-            /*if (Input.GetKeyDown(KeyCode.Space))
+            if(Input.GetKey(KeyCode.Space))
             {
-                Debug.Log("Space has been pressed");
-            }*/
+                Debug.Log("Mantiene pulsado: " + KeyCode.Space);
+                //cameraFollow.cameraDistance = 20f;
+                //cameraFollow.objectToFollow = this.gameObject;
+                pivotObject.transform.parent.GetComponent<Renderer>().material.color = new Color(1f, 1f, 1f, 0.5f);
+            }
+            else if (Input.GetKeyUp(KeyCode.Space))
+            {
+                Debug.Log("Suelta: " + KeyCode.Space);
+                //cameraFollow.cameraDistance = 20f;
+                //rb.AddForce(new Vector3(0, 0, transform.position.z * 500)); //no funciona
+                rb.AddForce(transform.forward * 500f, ForceMode.Force);
 
+                pivotObject.transform.parent.GetComponent<Renderer>().material.color = new Color(1f, 1f, 1f, 1f);
+            }
         }
+    }
+
+    void ProcessGravity()
+    {
+         Vector3 diff = transform.position - pivotObject.transform.position;
+         rb.AddForce(-diff.normalized * pivotObject.transform.parent.GetComponent<GravityField>().gravity * (rb.mass)); //gravity
+         Debug.DrawRay(transform.position, diff.normalized, Color.yellow);
     }
 
     private void GenerateRandomDirection()

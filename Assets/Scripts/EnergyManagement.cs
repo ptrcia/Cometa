@@ -2,6 +2,8 @@ using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
+
 
 public class EnergyManagement : MonoBehaviour
 {
@@ -12,10 +14,10 @@ public class EnergyManagement : MonoBehaviour
 
     public bool isFullEnergised;
     [SerializeField] TextMeshProUGUI energyText;
+    [SerializeField]Slider energySlider;
 
     PlanetInteraction planetInteraction;
     PlayerMovement playerMovement;
-
 
     private void Awake()
     {
@@ -31,6 +33,7 @@ public class EnergyManagement : MonoBehaviour
     {
         Energy();
         energyText.text = "Energy -> " + (int)currentEnergy;
+        energySlider.value = currentEnergy;
 
     }
     public void Energy()
@@ -68,16 +71,22 @@ public class EnergyManagement : MonoBehaviour
     }
     IEnumerator IncreaseEnergy()
     {
+
+        WaitForSeconds wait = new WaitForSeconds(1);
+
         while (planetInteraction.isOrbiting && currentEnergy < maxEnergy)
         {
             currentEnergy += energyRate * Time.deltaTime;
-            yield return new WaitForSeconds(1);
+            //Debug.Log("currentEnergy: " + currentEnergy + "// energyRate: " + energyRate + "// time: " + Time.deltaTime);
+            //imprimir
+            yield return wait;
         }
 
         if (currentEnergy >= maxEnergy)
         {
             currentEnergy = maxEnergy;
             isFullEnergised = true;
+            //UI iluminar y pulsar barra
         }
 
     }
