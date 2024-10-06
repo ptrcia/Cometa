@@ -4,17 +4,30 @@ using UnityEngine;
 
 public class PlanetInteraction : MonoBehaviour
 {
+    [Header("Orbitation")]
     [SerializeField] GameObject pivotObject = null;
     [SerializeField] Vector3 directionOfRotation;
-    
+
     public bool isOrbiting = false; // Para saber si el jugador está en órbita
+
+    [Header("Impulse")]
+    [SerializeField] bool isImpulsing;
+    [SerializeField] int impulseForce = 70;
+    [SerializeField] float deceleration = 0.5f;
+    [SerializeField] SpriteRenderer arrowPointer;
+    [SerializeField] GameObject holdSpace;
+    [SerializeField] GameObject releaseSpace;
+
+    [Header("Gravity")]
+    [SerializeField] bool isBeingAttracted;
+
+
 
     PlayerMovement playerMovement;
     CameraFollow cameraFollow;
     Rigidbody rb;
     EnergyManagement energyManagement;
     GravityField gravityField;
-    
 
     private void Awake()
     {
@@ -27,6 +40,10 @@ public class PlanetInteraction : MonoBehaviour
 
     private void Start()
     {
+        arrowPointer.enabled = false;
+        holdSpace.SetActive(false);
+        releaseSpace.SetActive(false);
+
         directionOfRotation = new Vector3(0, 0, 1);  
     }
 
@@ -40,7 +57,7 @@ public class PlanetInteraction : MonoBehaviour
             pivotObject = collision.gameObject; // Guardar el planeta como objeto pivote
             Debug.Log("Player collision with: " + pivotObject.transform.parent.name);
 
-            playerMovement.enabled = false;
+            //playerMovement.enabled = false;
             playerMovement.currentSpeed = 0;
             
             rb.useGravity = false;
@@ -67,13 +84,28 @@ public class PlanetInteraction : MonoBehaviour
     {
         if (other.gameObject.CompareTag("PlanetAttractionField")) //el collider
         {
-            //añadirle campo de atracion gravitacional
-            //no funciona
-
             pivotObject = other.gameObject;
-            //Debug.Log("Player enter the gravity field of the: " + pivotObject.transform.parent.name);
+            Debug.Log("Player enter the gravity field of the: " + pivotObject.transform.parent.name);
 
-            ProcessGravity();
+            isBeingAttracted = true;
+            AttractToPlanet();
+        }
+    }
+    private void OnTriggerExit(Collider other)
+    {
+        // Si el cometa sale del campo gravitacional del planeta
+        if (other.gameObject.CompareTag("PlanetAttractionField") && pivotObject != null)
+        {
+            Debug.Log("Player exit the gravity field of the: " + pivotObject.transform.parent.name);
+
+            isBeingAttracted = false;
+        }
+    }
+    private void FixedUpdate()
+    {
+        if (isBeingAttracted && pivotObject != null)
+        {
+            AttractToPlanet();
         }
     }
 
@@ -85,40 +117,74 @@ public class PlanetInteraction : MonoBehaviour
 
             transform.RotateAround(pivotObject.transform.position, directionOfRotation, 
                 (pivotObject.transform.parent.GetComponent<GravityField>().rotationSpeed 
-                + playerMovement.currentSpeed)  * Time.deltaTime);// Rotar alrededor del planeta en cada frame
+                + playerMovement.currentSpeed)  * Time.deltaTime);
         }
 
         if (isOrbiting && energyManagement.isFullEnergised)
         {
-            if(Input.GetKey(KeyCode.Space))
+            holdSpace.SetActive(true);
+
+            if (Input.GetKey(KeyCode.Space))
             {
                 Debug.Log("Mantiene pulsado: " + KeyCode.Space);
-                //cameraFollow.cameraDistance = 20f;
-                //cameraFollow.objectToFollow = this.gameObject;
+                holdSpace.SetActive(false);
+                releaseSpace.SetActive(true);
+                arrowPointer.enabled = true;
                 pivotObject.transform.parent.GetComponent<Renderer>().material.color = new Color(1f, 1f, 1f, 0.5f);
             }
             else if (Input.GetKeyUp(KeyCode.Space))
             {
                 Debug.Log("Suelta: " + KeyCode.Space);
-                //cameraFollow.cameraDistance = 20f;
-                //rb.AddForce(new Vector3(0, 0, transform.position.z * 500)); //no funciona
-                rb.AddForce(transform.forward * 500f, ForceMode.Force);
+
+                ApplyImpulse();
+                arrowPointer.enabled = false;
+                isImpulsing = true;
 
                 pivotObject.transform.parent.GetComponent<Renderer>().material.color = new Color(1f, 1f, 1f, 1f);
             }
+
+        }
+        if (isImpulsing)
+        {
+            holdSpace.SetActive(false);
+            releaseSpace.SetActive(false);
+            ApplyDeceleration();
         }
     }
 
-    void ProcessGravity()
+    private void ApplyDeceleration()
     {
-         Vector3 diff = transform.position - pivotObject.transform.position;
-         rb.AddForce(-diff.normalized * pivotObject.transform.parent.GetComponent<GravityField>().gravity * (rb.mass)); //gravity
-         Debug.DrawRay(transform.position, diff.normalized, Color.yellow);
+        playerMovement.currentSpeed -= deceleration * Time.fixedDeltaTime;
+
+        if (playerMovement.currentSpeed < 0)
+        {
+            playerMovement.currentSpeed = 0;
+            isImpulsing = false; 
+        }
+
+        rb.velocity = transform.forward * playerMovement.currentSpeed;
+    }
+
+    private void ApplyImpulse()
+    {
+        Vector3 forceDirection = transform.forward;
+        rb.AddForce(forceDirection * impulseForce, ForceMode.Impulse);
+        playerMovement.currentSpeed = impulseForce;
+    }
+
+
+    private void AttractToPlanet()
+    {
+        Vector3 directionToPlanet = pivotObject.transform.position - transform.position;
+        directionToPlanet.Normalize(); 
+
+        // Aplicar una fuerza
+        rb.AddForce(directionToPlanet * (pivotObject.transform.parent.GetComponent<GravityField>().gravity) * Time.fixedDeltaTime, ForceMode.Acceleration);
     }
 
     private void GenerateRandomDirection()
     {
-        int randomNumber = Random.Range(0, 5);
+        int randomNumber = Random.Range(0, 6);
         switch (randomNumber)
         {
             case 0:

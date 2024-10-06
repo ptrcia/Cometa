@@ -11,31 +11,30 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] float deceleration;
     public float currentSpeed;
 
+    PlanetInteraction planetInteraction;
+
+    private void Awake()
+    {
+        planetInteraction = GetComponent<PlanetInteraction>();
+    }
+
     private void Update()
     {
         if (Time.timeScale == 0) {
             return; 
         }
 
-        transform.Rotate(Vector3.up * speedRot * Input.GetAxis("Mouse X"));
-        transform.Rotate(Vector3.right * -speedRot * Input.GetAxis("Mouse Y"));
+        RotateView();
 
-        Vector3 rot = transform.rotation.eulerAngles;
-        rot.z = 0;
-
-        if (rot.x > 50 && rot.x < 180){
-            rot.x = 50; 
+        if (!planetInteraction.isOrbiting)
+        {
+            Move();
         }
-        if (rot.x < 310 && rot.x > 180){
-            rot.x = 310; 
-        }
-
-        transform.rotation = Quaternion.Euler(rot);
 
     }
-    private void FixedUpdate()
-    {
 
+    private void Move()
+    {
         // Input del jugador
         float inputVertical = Input.GetAxis("Vertical");
         float inputHorizontal = Input.GetAxis("Horizontal");
@@ -66,4 +65,25 @@ public class PlayerMovement : MonoBehaviour
 
         GetComponent<Rigidbody>().velocity = velocity;
     }
+
+    private void RotateView()
+    {
+        transform.Rotate(Vector3.up * speedRot * Input.GetAxis("Mouse X"));
+        transform.Rotate(Vector3.right * -speedRot * Input.GetAxis("Mouse Y"));
+
+        Vector3 rot = transform.rotation.eulerAngles;
+        rot.z = 0;
+
+        if (rot.x > 50 && rot.x < 180)
+        {
+            rot.x = 50;
+        }
+        if (rot.x < 310 && rot.x > 180)
+        {
+            rot.x = 310;
+        }
+
+        transform.rotation = Quaternion.Euler(rot);
+    }
+
 }

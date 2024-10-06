@@ -21,20 +21,20 @@ public class GravityField : MonoBehaviour
         switch (planetSize)
         {
             case planetSize.small:
-                rotationSpeed = 50.0f;
-                gravity = 3f;
+                rotationSpeed = 80.0f;
+                gravity = 10000f;
                 break;
             case planetSize.medium:
-                rotationSpeed = 25.0f;
-                gravity = 9.81f;
+                rotationSpeed = 60.0f;
+                gravity = 20000f;
                 break;
             case planetSize.large:
-                rotationSpeed = 10.0f;
-                gravity = 15f;
+                rotationSpeed = 50.0f;
+                gravity = 30000f;
                 break;
             default:
-                rotationSpeed = 1.0f;
-                gravity = 9.81f;
+                rotationSpeed = 50.0f;
+                gravity = 10000f;
                 break;
         }
     }
