@@ -400,7 +400,6 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 295520563}
-  - {fileID: 680248711}
   - {fileID: 1207357968}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -991,12 +990,12 @@ Transform:
   m_GameObject: {fileID: 680248710}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0.9250761, y: 0.843, z: 2.497}
-  m_LocalScale: {x: 0.1, y: 0.1, z: 0.1}
+  m_LocalPosition: {x: 0, y: 0.0027910324, z: -0.6201383}
+  m_LocalScale: {x: 0.093031906, y: 0.093031906, z: 0.093031906}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 2047198611}
-  m_Father: {fileID: 144154971}
+  m_Father: {fileID: 1207357968}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &680248712
 MonoBehaviour:
@@ -1341,6 +1340,65 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 869378646}
   m_CullTransparentMesh: 1
+--- !u!1 &878562461
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 878562463}
+  - component: {fileID: 878562462}
+  m_Layer: 0
+  m_Name: PlanetGeneration
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &878562462
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 878562461}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f123edf5dd60d3349a09150abec0c926, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  sphereCount: 1
+  satelliteCount: 0
+  maxRadius: 10
+  spheres: []
+  matsPlanets:
+  - {fileID: 2100000, guid: 170c83ede85caf74794b594979664086, type: 2}
+  - {fileID: 2100000, guid: aab9b88eb4433e84cbe6ed1c09e55b84, type: 2}
+  - {fileID: 2100000, guid: 71ed50584b371d04d991cb62784dceb6, type: 2}
+  matsSatellites:
+  - {fileID: 10756, guid: 0000000000000000e000000000000000, type: 0}
+  - {fileID: 2100000, guid: 2661c33084114f644bf58562f9a314c9, type: 2}
+  trailMat:
+  - {fileID: 2100000, guid: 9263fb1a00a2d424a9a3cf3d115b2067, type: 2}
+  - {fileID: 2100000, guid: 595af23b600e0c247b4f54455c750335, type: 2}
+  player: {fileID: 2128079241}
+--- !u!4 &878562463
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 878562461}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 9.250761, y: 4.5999994, z: 31.635866}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &898775440
 GameObject:
   m_ObjectHideFlags: 0
@@ -6610,6 +6668,7 @@ Transform:
   m_Children:
   - {fileID: 2082706082}
   - {fileID: 1749022166}
+  - {fileID: 680248711}
   m_Father: {fileID: 144154971}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &1207357969
@@ -6627,6 +6686,7 @@ MonoBehaviour:
   optionPlanetSize: 1
   rotationSpeed: 0
   gravity: 0
+  satellites: 0
 --- !u!1 &1291252474
 GameObject:
   m_ObjectHideFlags: 0
@@ -8196,3 +8256,4 @@ SceneRoots:
   - {fileID: 163390119}
   - {fileID: 1345196240}
   - {fileID: 898775443}
+  - {fileID: 878562463}

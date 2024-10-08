@@ -10,12 +10,11 @@ public class GravityField : MonoBehaviour
     public float rotationSpeed;
     public float gravity;
 
-
+    public int satellites;
     void Start()
     {
         PlanetSize(optionPlanetSize);
     }
-
     public void PlanetSize(planetSize planetSize)
     {
         switch (planetSize)
@@ -37,6 +36,11 @@ public class GravityField : MonoBehaviour
                 gravity = 10000f;
                 break;
         }
+    }
+
+    public void SatelliteGeneration()
+    {
+
     }
 
 }

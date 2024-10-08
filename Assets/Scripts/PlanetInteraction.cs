@@ -184,28 +184,19 @@ public class PlanetInteraction : MonoBehaviour
 
     private void GenerateRandomDirection()
     {
-        int randomNumber = Random.Range(0, 6);
+        //esto en teoria no funciona asi 
+        int randomNumber = Random.Range(0, 3);
         switch (randomNumber)
         {
             case 0:
-                directionOfRotation = new Vector3(1, 1, 0);
+                directionOfRotation = Vector3.up;  //  eje Y
                 break;
             case 1:
-                directionOfRotation = new Vector3(0, 0, 1);
+                directionOfRotation = Vector3.right;  //eje X 
                 break;
             case 2:
-                directionOfRotation = new Vector3(1, 0, 1);
+                directionOfRotation = Vector3.forward;  // eje Z 
                 break;
-            case 3:
-                directionOfRotation = new Vector3(0, 1, 0);
-                break;
-            case 4:
-                directionOfRotation = new Vector3(0, 1, 1);
-                break;
-            case 5:
-                directionOfRotation = new Vector3(1, 0, 0);
-                break;
-
         }
     }
 }

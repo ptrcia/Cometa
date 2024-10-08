@@ -4,12 +4,12 @@ using UnityEngine;
 
 public class RotateAroundPoint : MonoBehaviour
 {
-    [SerializeField] float rotationSpeed;
-    [SerializeField] GameObject pivotObject;
+    [SerializeField] public float rotationSpeed;
+    [SerializeField] public GameObject pivotObject;
 
     private void Start()
     {
-        
+        rotationSpeed = Random.Range(20, 50);
     }
 
     private void Update()
