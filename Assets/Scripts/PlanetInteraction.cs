@@ -7,7 +7,7 @@ public class PlanetInteraction : MonoBehaviour
     [Header("Orbitation")]
     [SerializeField] GameObject pivotObject = null;
     [SerializeField] Vector3 directionOfRotation;
-
+    
     public bool isOrbiting = false; // Para saber si el jugador está en órbita
 
     [Header("Impulse")]
@@ -29,6 +29,8 @@ public class PlanetInteraction : MonoBehaviour
     EnergyManagement energyManagement;
     GravityField gravityField;
 
+    private Vector3 randomAxis;
+
     private void Awake()
     {
         playerMovement = GetComponent<PlayerMovement>();
@@ -44,7 +46,8 @@ public class PlanetInteraction : MonoBehaviour
         holdSpace.SetActive(false);
         releaseSpace.SetActive(false);
 
-        directionOfRotation = new Vector3(0, 0, 1);  
+        directionOfRotation = new Vector3(0, 0, 1);
+        randomAxis = Random.onUnitSphere;
     }
 
     private void OnCollisionEnter(Collision collision)
@@ -115,9 +118,14 @@ public class PlanetInteraction : MonoBehaviour
         {
             //Debug.Log("Pivote: "+ pivotObject.name + " del " + pivotObject.transform.parent.name);
 
-            transform.RotateAround(pivotObject.transform.position, directionOfRotation, 
-                (pivotObject.transform.parent.GetComponent<GravityField>().rotationSpeed 
-                + playerMovement.currentSpeed)  * Time.deltaTime);
+            //transform.RotateAround(pivotObject.transform.position, directionOfRotation, 
+             //   (pivotObject.transform.parent.GetComponent<GravityField>().rotationSpeed 
+             //   + playerMovement.currentSpeed)  * Time.deltaTime);
+
+
+            transform.RotateAround(pivotObject.transform.position, randomAxis,
+                (pivotObject.transform.parent.GetComponent<GravityField>().rotationSpeed
+                + playerMovement.currentSpeed) * Time.deltaTime);
         }
 
         if (isOrbiting && energyManagement.isFullEnergised)
@@ -182,7 +190,7 @@ public class PlanetInteraction : MonoBehaviour
         rb.AddForce(directionToPlanet * (pivotObject.transform.parent.GetComponent<GravityField>().gravity) * Time.fixedDeltaTime, ForceMode.Acceleration);
     }
 
-    private void GenerateRandomDirection()
+    private void GenerateRandomDirection()// esto ahora mismio es tonteria he cambaido el updatee
     {
         //esto en teoria no funciona asi 
         int randomNumber = Random.Range(0, 3);

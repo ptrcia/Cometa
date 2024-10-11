@@ -27,10 +27,8 @@ public class PlanetGeneration : MonoBehaviour
     {
         var sphs = new GameObject[count];
         var sphereToCopy = GameObject.CreatePrimitive(PrimitiveType.Sphere);
-        //Rigidbody rb = sphereToCopy.GetComponent<Rigidbody>();
-        //rb.useGravity = false;
-        
-        for(int i = 0; i< count; i++)
+
+        for (int i = 0; i< count; i++)
         {
             var sp = GameObject.Instantiate(sphereToCopy);
             CreateSatellites(sp);
@@ -41,11 +39,12 @@ public class PlanetGeneration : MonoBehaviour
             //Position
             sp.transform.position = player.transform.position +
                 new Vector3(Random.Range(-maxRadius, maxRadius), //X
-                Random.Range(-10, 10), // y altura
+                //Random.Range(-10, 10), // y altura
+                Random.Range(-maxRadius, maxRadius),
                 Random.Range(-maxRadius, maxRadius)); //z
 
             //Scale
-            sp.transform.localScale *= Random.Range(0.5f, 1);
+            sp.transform.localScale *= Random.Range(5, 20);
 
             //Collider
             SphereCollider collider = sp.GetComponent<SphereCollider>();
@@ -54,7 +53,7 @@ public class PlanetGeneration : MonoBehaviour
             sp.GetComponent<Renderer>().material = matsPlanets[Random.Range(0, matsPlanets.Length)];
 
             //Gravity
-            GravityField gravityField = sp.GetComponent<GravityField>();
+            GravityField gravityField = sp.AddComponent<GravityField>();
             gravityField.optionPlanetSize = (GravityField.planetSize)Random.Range(0, 3);
             gravityField.PlanetSize(gravityField.optionPlanetSize);
 
@@ -75,11 +74,15 @@ public class PlanetGeneration : MonoBehaviour
             attractionSphere.transform.localRotation = Quaternion.identity;
             attractionSphere.tag = "PlanetAttractionField";
             SphereCollider colliderAtraction = attractionSphere.AddComponent<SphereCollider>();
-            colliderAtraction.isTrigger = false;
+            colliderAtraction.isTrigger = true;
             colliderAtraction.radius = Random.Range(collider.radius + 30, collider.radius + 60);     
 
         }
+
+        //GameObject.Destroy(sphereToCopy);
         GameObject.Destroy(sphereToCopy);
+        Debug.Log("Sphere to Copy about to be destroyed: " + sphereToCopy.name);
+
 
         return spheres;
     }
@@ -95,18 +98,20 @@ public class PlanetGeneration : MonoBehaviour
             satellite.name = "Satellite - " + i.ToString();
 
             //Position
-            Vector3 satellitePosition = Random.onUnitSphere * Random.Range(3.0f, 5.0f);  // Distancia aleatoria desde el planeta
+            Vector3 satellitePosition = Random.onUnitSphere * Random.Range(1.0f, 3.0f);  // Distancia aleatoria desde el planeta
             satellite.transform.localPosition = satellitePosition;
 
             //Scale
-            satellite.transform.localScale = Vector3.one * Random.Range(0.3f, 0.7f);
+            satellite.transform.localScale = Vector3.one * Random.Range(0.1f, 0.2f);
 
             //RotateAroundPoint
             RotateAroundPoint rotateAroundPoint = satellite.AddComponent<RotateAroundPoint>();
             rotateAroundPoint.pivotObject = satellite.transform.parent.gameObject;
-            
+
             //Material
-            satellite.GetComponent<Renderer>().material = matsSatellites[Random.Range(0, matsPlanets.Length)];
+            //satellite.GetComponent<Renderer>().material = matsSatellites[Random.Range(0, matsPlanets.Length)];
+
+            satellite.GetComponent<Renderer>().material = matsSatellites[Random.Range(0, matsSatellites.Length)];
 
             //Trail
             TrailRenderer tr = satellite.AddComponent<TrailRenderer>(); //adcomponent o getcomoponent?
@@ -116,6 +121,8 @@ public class PlanetGeneration : MonoBehaviour
             tr.material = trailMat[Random.Range(0, trailMat.Length)];
             tr.startColor = new Color(1, 1, 0, 0.1f);
             tr.endColor = new Color(0, 0, 0, 0);
+            tr.startWidth = 5;
+            tr.endWidth = 0;
 
         }
     }
