@@ -5,24 +5,46 @@ using UnityEngine;
 
 public class PlanetGeneration : MonoBehaviour
 {
+    public int minDistanceBetweenPlanets = 50;
     public int sphereCount;
     public int satelliteCount;
     public int maxRadius;
+    public float generationThreshold; // Distance to generate new planets
+    public float destructionThreshold; // Distance to destroy far away planets
+
+
     public GameObject[] spheres;
     public Material[] matsPlanets;
     public Material[] matsSatellites;
     public Material[] trailMat;
 
-
     [SerializeField] GameObject player;
+
+    private Vector3 lastPlayerPosition;
+    private int planetCounter;
+
     private void Awake()
     {
         spheres = new GameObject[sphereCount];
     }
     private void Start()
     {
+        lastPlayerPosition = player.transform.position;
         spheres = CreateSpheres(sphereCount, maxRadius);
     }
+
+    private void Update()
+    {
+        // Check distance player
+        if (Vector3.Distance(player.transform.position, lastPlayerPosition) > generationThreshold)
+        {
+            //Generate new planets
+            spheres = CreateSpheres(sphereCount, maxRadius);
+            lastPlayerPosition = player.transform.position;
+        }
+
+    }
+
     public GameObject[] CreateSpheres(int count, int radius)
     {
         var sphs = new GameObject[count];
@@ -30,18 +52,41 @@ public class PlanetGeneration : MonoBehaviour
 
         for (int i = 0; i< count; i++)
         {
+
+            //Separation between generated planets
+            Vector3 newPosition;
+            bool positionValid;
+
+            do
+            {
+                newPosition = player.transform.position + new Vector3(
+                    Random.Range(-maxRadius, maxRadius), //X
+                    Random.Range(-maxRadius, maxRadius), //Y
+                    Random.Range(-maxRadius, maxRadius)); //Z
+
+                positionValid = true;
+
+                foreach (GameObject sphere in sphs)
+                {
+                    if (sphere != null && Vector3.Distance(newPosition, sphere.transform.position) < minDistanceBetweenPlanets) // Distancia mínima entre planetas
+                    {
+                        positionValid = false;
+                        break;
+                    }
+                }
+            } while (!positionValid);
+
+            //Create copy
             var sp = GameObject.Instantiate(sphereToCopy);
             CreateSatellites(sp);
 
             //Name
-            sp.name = "Planet - " + i.ToString();
+            sp.name = $"Planet - {planetCounter++}";
+            sp.tag = "Planet";
+            
 
             //Position
-            sp.transform.position = player.transform.position +
-                new Vector3(Random.Range(-maxRadius, maxRadius), //X
-                //Random.Range(-10, 10), // y altura
-                Random.Range(-maxRadius, maxRadius),
-                Random.Range(-maxRadius, maxRadius)); //z
+            sp.transform.position = newPosition;
 
             //Scale
             sp.transform.localScale *= Random.Range(5, 20);
@@ -79,13 +124,11 @@ public class PlanetGeneration : MonoBehaviour
 
         }
 
-        //GameObject.Destroy(sphereToCopy);
         GameObject.Destroy(sphereToCopy);
-        Debug.Log("Sphere to Copy about to be destroyed: " + sphereToCopy.name);
-
 
         return spheres;
     }
+
     void CreateSatellites(GameObject planet)
     {
         satelliteCount = Random.Range(1, 6);
@@ -98,7 +141,7 @@ public class PlanetGeneration : MonoBehaviour
             satellite.name = "Satellite - " + i.ToString();
 
             //Position
-            Vector3 satellitePosition = Random.onUnitSphere * Random.Range(1.0f, 3.0f);  // Distancia aleatoria desde el planeta
+            Vector3 satellitePosition = Random.onUnitSphere * Random.Range(0.8f, 2.0f);  // Distancia aleatoria desde el planeta
             satellite.transform.localPosition = satellitePosition;
 
             //Scale
@@ -109,8 +152,6 @@ public class PlanetGeneration : MonoBehaviour
             rotateAroundPoint.pivotObject = satellite.transform.parent.gameObject;
 
             //Material
-            //satellite.GetComponent<Renderer>().material = matsSatellites[Random.Range(0, matsPlanets.Length)];
-
             satellite.GetComponent<Renderer>().material = matsSatellites[Random.Range(0, matsSatellites.Length)];
 
             //Trail
@@ -126,4 +167,15 @@ public class PlanetGeneration : MonoBehaviour
 
         }
     }
+    private void OnDrawGizmos()
+    {
+        //drawing a circle on the generation threshold
+        Gizmos.color = Color.green;
+        Gizmos.DrawWireSphere(player.transform.position, generationThreshold);
+
+        //drawing a circle on the destruction threshold
+        Gizmos.color = Color.red;
+        Gizmos.DrawWireSphere(player.transform.position, destructionThreshold);
+    }
+
 }

@@ -5,7 +5,7 @@ using UnityEngine;
 public class PlanetInteraction : MonoBehaviour
 {
     [Header("Orbitation")]
-    [SerializeField] GameObject pivotObject = null;
+    public GameObject pivotObject = null;
     [SerializeField] Vector3 directionOfRotation;
     
     public bool isOrbiting = false; // Para saber si el jugador está en órbita
@@ -28,7 +28,8 @@ public class PlanetInteraction : MonoBehaviour
     Rigidbody rb;
     EnergyManagement energyManagement;
     GravityField gravityField;
-
+    [SerializeField] PlanetGeneration planetGeneration;
+    public SphereCollider destructionTrigger;
     private Vector3 randomAxis;
 
     private void Awake()
@@ -38,6 +39,7 @@ public class PlanetInteraction : MonoBehaviour
         rb = GetComponent<Rigidbody>();
         energyManagement = GetComponent<EnergyManagement>();
         gravityField = GetComponent<GravityField>();
+        destructionTrigger = GetComponent<SphereCollider>();
     }
 
     private void Start()
@@ -48,6 +50,9 @@ public class PlanetInteraction : MonoBehaviour
 
         directionOfRotation = new Vector3(0, 0, 1);
         randomAxis = Random.onUnitSphere;
+
+        destructionTrigger.radius = planetGeneration.destructionThreshold;
+
     }
 
     private void OnCollisionEnter(Collision collision)
@@ -103,6 +108,11 @@ public class PlanetInteraction : MonoBehaviour
 
             isBeingAttracted = false;
         }
+
+        if (other.CompareTag("Planet")) //destroy planets
+        {
+            Destroy(other.gameObject);
+        }
     }
     private void FixedUpdate()
     {
@@ -117,11 +127,6 @@ public class PlanetInteraction : MonoBehaviour
         if (isOrbiting && pivotObject != null)
         {
             //Debug.Log("Pivote: "+ pivotObject.name + " del " + pivotObject.transform.parent.name);
-
-            //transform.RotateAround(pivotObject.transform.position, directionOfRotation, 
-             //   (pivotObject.transform.parent.GetComponent<GravityField>().rotationSpeed 
-             //   + playerMovement.currentSpeed)  * Time.deltaTime);
-
 
             transform.RotateAround(pivotObject.transform.position, randomAxis,
                 (pivotObject.transform.parent.GetComponent<GravityField>().rotationSpeed
@@ -179,7 +184,6 @@ public class PlanetInteraction : MonoBehaviour
         rb.AddForce(forceDirection * impulseForce, ForceMode.Impulse);
         playerMovement.currentSpeed = impulseForce;
     }
-
 
     private void AttractToPlanet()
     {

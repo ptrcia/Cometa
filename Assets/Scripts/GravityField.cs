@@ -37,10 +37,4 @@ public class GravityField : MonoBehaviour
                 break;
         }
     }
-
-    public void SatelliteGeneration()
-    {
-
-    }
-
 }
