@@ -20,8 +20,7 @@ public class PlanetInteraction : MonoBehaviour
 
     [Header("Gravity")]
     [SerializeField] bool isBeingAttracted;
-
-
+    public SphereCollider destructionTrigger;
 
     PlayerMovement playerMovement;
     CameraFollow cameraFollow;
@@ -29,7 +28,6 @@ public class PlanetInteraction : MonoBehaviour
     EnergyManagement energyManagement;
     GravityField gravityField;
     [SerializeField] PlanetGeneration planetGeneration;
-    public SphereCollider destructionTrigger;
     private Vector3 randomAxis;
 
     private void Awake()
@@ -63,7 +61,7 @@ public class PlanetInteraction : MonoBehaviour
             GenerateRandomDirection();
 
             pivotObject = collision.gameObject; // Guardar el planeta como objeto pivote
-            Debug.Log("Player collision with: " + pivotObject.transform.parent.name);
+            Debug.Log("Entered collision with: " + pivotObject.transform.parent.name);
 
             //playerMovement.enabled = false;
             playerMovement.currentSpeed = 0;
@@ -80,6 +78,8 @@ public class PlanetInteraction : MonoBehaviour
     {
         if (collision.gameObject.CompareTag("Planet"))
         {
+            Debug.Log("Exit collision with: " + collision.gameObject.name);
+
             cameraFollow.objectToFollow = this.gameObject;
             playerMovement.enabled = true;
 

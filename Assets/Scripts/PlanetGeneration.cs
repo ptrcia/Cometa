@@ -57,7 +57,7 @@ public class PlanetGeneration : MonoBehaviour
             Vector3 newPosition;
             bool positionValid;
 
-            do
+            do //PROBLEMA: los planetas se deben ir presentando delante o en los lados, no atrás
             {
                 newPosition = player.transform.position + new Vector3(
                     Random.Range(-maxRadius, maxRadius), //X
