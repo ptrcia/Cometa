@@ -64,7 +64,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 12.631046, y: 12.631046, z: 12.631046}
+  m_LocalScale: {x: 68.67626, y: 68.67626, z: 68.67626}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 2517776134321536184}
@@ -185,7 +185,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 48.346657, y: 48.346657, z: 48.346657}
+  m_LocalScale: {x: 262.8656, y: 262.8656, z: 262.8656}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 2517776134321536184}
@@ -275,7 +275,7 @@ GameObject:
   - component: {fileID: 1936846084402217970}
   m_Layer: 0
   m_Name: Collider IN
-  m_TagString: Planet
+  m_TagString: PlanetOrbit
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -290,7 +290,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 19.95075, y: 19.95075, z: 19.95075}
+  m_LocalScale: {x: 108.47422, y: 108.47422, z: 108.47422}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 2517776134321536184}

@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using TMPro;
 using UnityEngine;
 
@@ -10,6 +11,7 @@ public class PlanetController : MonoBehaviour
     public bool isInvoked;
     public int firstAct;
 
+    [SerializeField] int distanceSpecialPlanet;
     [SerializeField] PlanetGeneration planetGeneration;
     [SerializeField] PlanetInteraction planetInteraction;
     [SerializeField] GameObject player;
@@ -49,12 +51,22 @@ public class PlanetController : MonoBehaviour
         {
             return;
         }
+        if(planetInteraction == null)
+        {
+            return;
+        }
 
         currentPlanet = planetInteraction.pivotObject.transform.parent.gameObject;
 
         foreach (GameObject obj in planetsOrbited)
         {
             Debug.Log("Planeta en lista: " + obj.name);
+            if (obj == null)
+            {
+                Debug.LogWarning("El objeto ha sido destruido y será eliminado de la lista.");
+                planetsOrbited.Remove(obj);
+                continue;
+            }
             if (obj.name == "SpecialPlanetFirstAct")
             {
                 continue;
@@ -78,50 +90,91 @@ public class PlanetController : MonoBehaviour
         {
             isLost = true;
             planetGeneration.sphereCount = 0;
+            planetInteraction.isOrbiting = false;
+            planetInteraction.isBeingAttracted = false; 
 
             //Spawn Special Planet
             if (!isInvoked)
             {
-                //Invoke("GenerateSpecialPlanet", 5); //los demas fallos tiene qu ever con esto
+                Invoke("GenerateSpecialPlanet", 5);
                 isInvoked = true;
             }
 
             //Make planets materials tranparent
-            //StartCoroutine(FadePlanets());  //esto tampoco funciona 
+            FadeAllPlanets(8f);
+
+            //Delete satellites
+            StartCoroutine(DeleteSatellites(5)); //deberia eliminarlos??????
 
             //Destroy Planets
-            //planetInteraction.destructionTrigger.radius = 10;
+            StartCoroutine(DestroyPlanets(10));
+
         }
         text.text = "Planet count -> " + planetsOrbited.Count;
     }
     public void GenerateSpecialPlanet()
     {
         GameObject instance = Instantiate(specialPlanetFirstAct);
-        instance.transform.position = player.transform.position + new Vector3(100, 0, 0);
+        instance.transform.position = player.transform.position + new Vector3
+            (player.transform.position.x+ distanceSpecialPlanet, 0, 0);
     }
-    IEnumerator FadePlanets()
+
+    public IEnumerator DeleteSatellites(int secondsToWait)
+    {
+        
+        GameObject[] satellites = GameObject.FindGameObjectsWithTag("Satellite");
+        if (satellites.Length == 0)
+        {
+            yield break; 
+        }
+
+        foreach (GameObject satellite in satellites)
+        {
+            Destroy(satellite);
+            yield return new WaitForSeconds(secondsToWait);
+        }
+        
+    }
+    public void FadeAllPlanets(float duration)
     {
         GameObject[] planets = GameObject.FindGameObjectsWithTag("Planet");
+        if (planets.Length == 0)
+        {
+            return;
+        }
 
-        float fadeDuration = 3.0f;
+        foreach (GameObject planet in planets)
+        {
+            StartCoroutine(FadeToTranslucent(planet, duration));
+        }
+    }
+
+    private IEnumerator FadeToTranslucent(GameObject planet, float fadeDuration)
+    {
+        Material planetMaterial = planet.GetComponentInParent<Renderer>().material;
+        Color originalColor = planetMaterial.color;
+        float startAlpha = originalColor.a;
+        float targetAlpha = 0f;
         float elapsedTime = 0f;
 
         while (elapsedTime < fadeDuration)
         {
             elapsedTime += Time.deltaTime;
-            float alphaValue = Mathf.Lerp(1f, 0f, elapsedTime / fadeDuration); 
-            foreach (GameObject planet in planets)
-            {
-                Renderer renderer = planet.GetComponent<Renderer>();
-                if (renderer != null)
-                {
-                    Color color = renderer.material.color;
-                    color.a = alphaValue; 
-                    renderer.material.color = color; 
-                }
-            }
+            float newAlpha = Mathf.Lerp(startAlpha, targetAlpha, elapsedTime / fadeDuration);
+
+            planetMaterial.color = new Color(originalColor.r, originalColor.g, originalColor.b, newAlpha);
 
             yield return null;
         }
+
+        planetMaterial.color = new Color(originalColor.r, originalColor.g, originalColor.b, targetAlpha);
+    }
+
+    private IEnumerator DestroyPlanets(int secondsToWait)
+    {
+        yield return new WaitForSeconds(secondsToWait);
+        planetInteraction.destructionTrigger.radius = 10;
+
     }
 }
+

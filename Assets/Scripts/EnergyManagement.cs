@@ -53,7 +53,7 @@ public class EnergyManagement : MonoBehaviour
             }else if (currentEnergy <= 0)
             {
                 //Game over
-                Debug.Log("Energy is empty");
+                GameManager.instanciate.GameOver();
             }
         }
 

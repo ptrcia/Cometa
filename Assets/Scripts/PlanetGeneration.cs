@@ -107,7 +107,8 @@ public class PlanetGeneration : MonoBehaviour
             orbitSphere.transform.SetParent(sp.transform);
             orbitSphere.transform.localPosition = Vector3.zero;
             orbitSphere.transform.localRotation = Quaternion.identity;
-            orbitSphere.tag = "Planet";
+            //orbitSphere.tag = "Planet";
+            orbitSphere.tag = "PlanetOrbit";
             SphereCollider colliderOrbit = orbitSphere.AddComponent<SphereCollider>();
             colliderOrbit.isTrigger = false;
             colliderOrbit.radius = Random.Range(collider.radius +10, collider.radius +20);
@@ -139,6 +140,7 @@ public class PlanetGeneration : MonoBehaviour
             satellite.transform.SetParent(planet.transform);
             //Name
             satellite.name = "Satellite - " + i.ToString();
+            satellite.tag = "Satellite";
 
             //Position
             Vector3 satellitePosition = Random.onUnitSphere * Random.Range(0.8f, 2.0f);  // Distancia aleatoria desde el planeta

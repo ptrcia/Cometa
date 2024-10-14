@@ -19,7 +19,7 @@ public class PlanetInteraction : MonoBehaviour
     [SerializeField] GameObject releaseSpace;
 
     [Header("Gravity")]
-    [SerializeField] bool isBeingAttracted;
+    public bool isBeingAttracted;
     public SphereCollider destructionTrigger;
 
     PlayerMovement playerMovement;
@@ -55,7 +55,7 @@ public class PlanetInteraction : MonoBehaviour
 
     private void OnCollisionEnter(Collision collision)
     {
-        if (collision.gameObject.CompareTag("Planet"))
+        if (collision.gameObject.CompareTag("PlanetOrbit"))
         {
             //Hacer que vaya cambiando la dirección!!!
             GenerateRandomDirection();
@@ -76,7 +76,7 @@ public class PlanetInteraction : MonoBehaviour
     }
     private void OnCollisionExit(Collision collision)
     {
-        if (collision.gameObject.CompareTag("Planet"))
+        if (collision.gameObject.CompareTag("PlanetOrbit"))
         {
             Debug.Log("Exit collision with: " + collision.gameObject.name);
 
@@ -109,6 +109,7 @@ public class PlanetInteraction : MonoBehaviour
             isBeingAttracted = false;
         }
 
+        //ESTO NO LO ENTIENDO
         if (other.CompareTag("Planet")) //destroy planets
         {
             Destroy(other.gameObject);
