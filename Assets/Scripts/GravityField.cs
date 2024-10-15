@@ -14,6 +14,7 @@ public class GravityField : MonoBehaviour
     void Start()
     {
         PlanetSize(optionPlanetSize);
+        FindSatellites();
     }
     public void PlanetSize(planetSize planetSize)
     {
@@ -37,4 +38,16 @@ public class GravityField : MonoBehaviour
                 break;
         }
     }
+
+    public void FindSatellites()
+    {
+        foreach (Transform child in this.transform)
+        {
+            if (child.tag == "Satellite") // Comprobar si el nombre empieza con "Satellite"
+            {
+                satellites++; // Incrementar el contador si coincide
+            }
+        }
+    }
+
 }

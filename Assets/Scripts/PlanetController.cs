@@ -7,18 +7,22 @@ using UnityEngine;
 
 public class PlanetController : MonoBehaviour
 {
-    public bool isLost;
-    public bool isInvoked;
+    [Header("First Act")]
     public int firstAct;
-
-    [SerializeField] int distanceSpecialPlanet;
-    [SerializeField] PlanetGeneration planetGeneration;
-    [SerializeField] PlanetInteraction planetInteraction;
-    [SerializeField] GameObject player;
-    [SerializeField] List<GameObject> planetsOrbited = new List<GameObject>();
-    [SerializeField] TextMeshProUGUI text;
+    public bool isLost;    
+    public bool isSpecialPlanetEvoked;
+    public bool isInvoked;
     [SerializeField] GameObject specialPlanetFirstAct;
+    [SerializeField] int distanceSpecialPlanet;
+    [SerializeField] GameObject companionPrefab;
 
+    [Header("Planets Orbited")]
+    [SerializeField] GameObject player;
+    [SerializeField] TextMeshProUGUI text;
+    [SerializeField] List<GameObject> planetsOrbited = new List<GameObject>();
+
+     [SerializeField] PlanetGeneration planetGeneration;
+     PlanetInteraction planetInteraction;
 
     private int inicialSphereCount;
     private float inicialDestroyRadius;
@@ -28,6 +32,7 @@ public class PlanetController : MonoBehaviour
 
     private void Awake()
     {
+        planetInteraction = player.GetComponent<PlanetInteraction>();
         player = GameObject.FindGameObjectWithTag("Player");
         isLost = false;
         isInvoked = false;
@@ -60,10 +65,9 @@ public class PlanetController : MonoBehaviour
 
         foreach (GameObject obj in planetsOrbited)
         {
-            Debug.Log("Planeta en lista: " + obj.name);
             if (obj == null)
             {
-                Debug.LogWarning("El objeto ha sido destruido y será eliminado de la lista.");
+                //Debug.LogWarning("El objeto ha sido destruido y será eliminado de la lista.");
                 planetsOrbited.Remove(obj);
                 continue;
             }
@@ -85,7 +89,7 @@ public class PlanetController : MonoBehaviour
 
 
 
-
+        //FIRST ACT
         if (planetsOrbited.Count == firstAct)
         {
             isLost = true;
@@ -97,6 +101,7 @@ public class PlanetController : MonoBehaviour
             if (!isInvoked)
             {
                 Invoke("GenerateSpecialPlanet", 5);
+                isSpecialPlanetEvoked = true;
                 isInvoked = true;
             }
 
@@ -108,6 +113,8 @@ public class PlanetController : MonoBehaviour
 
             //Destroy Planets
             StartCoroutine(DestroyPlanets(10));
+
+
 
         }
         text.text = "Planet count -> " + planetsOrbited.Count;
@@ -174,7 +181,11 @@ public class PlanetController : MonoBehaviour
     {
         yield return new WaitForSeconds(secondsToWait);
         planetInteraction.destructionTrigger.radius = 10;
+    }
 
+    public void SpawnCompanion()
+    {
+        Instantiate(companionPrefab, Vector3.zero, Quaternion.identity);
     }
 }
 

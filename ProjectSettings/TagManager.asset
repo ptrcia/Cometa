@@ -8,6 +8,8 @@ TagManager:
   - PlanetAttractionField
   - Satellite
   - PlanetOrbit
+  - CompanionEnergy
+  - Companion
   layers:
   - Default
   - TransparentFX

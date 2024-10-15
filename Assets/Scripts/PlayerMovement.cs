@@ -10,6 +10,9 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] float acceleration;
     [SerializeField] float deceleration;
     public float currentSpeed;
+    public bool canMove = true;
+    private float inputVertical;
+    private float inputHorizontal;
 
     PlanetInteraction planetInteraction;
 
@@ -35,9 +38,17 @@ public class PlayerMovement : MonoBehaviour
 
     private void Move()
     {
+        if(!canMove)
+        {
+            inputVertical = 0;
+            inputHorizontal = 0;
+        }
+        else
+        {
+            inputVertical = Input.GetAxis("Vertical");
+            inputHorizontal = Input.GetAxis("Horizontal");
+        }
         // Input del jugador
-        float inputVertical = Input.GetAxis("Vertical");
-        float inputHorizontal = Input.GetAxis("Horizontal");
 
         // Aceleración cuando hay input
         if (inputVertical != 0 || inputHorizontal != 0)

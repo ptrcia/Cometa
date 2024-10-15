@@ -23,6 +23,8 @@ public class PlanetGeneration : MonoBehaviour
     private Vector3 lastPlayerPosition;
     private int planetCounter;
 
+    GravityField gravityField;
+
     private void Awake()
     {
         spheres = new GameObject[sphereCount];
@@ -98,7 +100,7 @@ public class PlanetGeneration : MonoBehaviour
             sp.GetComponent<Renderer>().material = matsPlanets[Random.Range(0, matsPlanets.Length)];
 
             //Gravity
-            GravityField gravityField = sp.AddComponent<GravityField>();
+            gravityField = sp.AddComponent<GravityField>();
             gravityField.optionPlanetSize = (GravityField.planetSize)Random.Range(0, 3);
             gravityField.PlanetSize(gravityField.optionPlanetSize);
 

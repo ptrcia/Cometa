@@ -6,7 +6,6 @@ public class PlanetInteraction : MonoBehaviour
 {
     [Header("Orbitation")]
     public GameObject pivotObject = null;
-    [SerializeField] Vector3 directionOfRotation;
     
     public bool isOrbiting = false; // Para saber si el jugador está en órbita
 
@@ -46,7 +45,6 @@ public class PlanetInteraction : MonoBehaviour
         holdSpace.SetActive(false);
         releaseSpace.SetActive(false);
 
-        directionOfRotation = new Vector3(0, 0, 1);
         randomAxis = Random.onUnitSphere;
 
         destructionTrigger.radius = planetGeneration.destructionThreshold;
@@ -57,11 +55,8 @@ public class PlanetInteraction : MonoBehaviour
     {
         if (collision.gameObject.CompareTag("PlanetOrbit"))
         {
-            //Hacer que vaya cambiando la dirección!!!
-            GenerateRandomDirection();
-
             pivotObject = collision.gameObject; // Guardar el planeta como objeto pivote
-            Debug.Log("Entered collision with: " + pivotObject.transform.parent.name);
+            //Debug.Log("Entered collision with: " + pivotObject.transform.parent.name);
 
             //playerMovement.enabled = false;
             playerMovement.currentSpeed = 0;
@@ -133,6 +128,11 @@ public class PlanetInteraction : MonoBehaviour
                 (pivotObject.transform.parent.GetComponent<GravityField>().rotationSpeed
                 + playerMovement.currentSpeed) * Time.deltaTime);
         }
+        /*else if(pivotObject == null)
+        {
+            Debug.Log("No encuentra el pivote en el Planet Interacrion");
+            return;
+        }*/
 
         if (isOrbiting && energyManagement.isFullEnergised)
         {
@@ -188,28 +188,19 @@ public class PlanetInteraction : MonoBehaviour
 
     private void AttractToPlanet()
     {
-        Vector3 directionToPlanet = pivotObject.transform.position - transform.position;
-        directionToPlanet.Normalize(); 
-
-        // Aplicar una fuerza
-        rb.AddForce(directionToPlanet * (pivotObject.transform.parent.GetComponent<GravityField>().gravity) * Time.fixedDeltaTime, ForceMode.Acceleration);
-    }
-
-    private void GenerateRandomDirection()// esto ahora mismio es tonteria he cambaido el updatee
-    {
-        //esto en teoria no funciona asi 
-        int randomNumber = Random.Range(0, 3);
-        switch (randomNumber)
+        if(pivotObject != null)
         {
-            case 0:
-                directionOfRotation = Vector3.up;  //  eje Y
-                break;
-            case 1:
-                directionOfRotation = Vector3.right;  //eje X 
-                break;
-            case 2:
-                directionOfRotation = Vector3.forward;  // eje Z 
-                break;
+            Vector3 directionToPlanet = pivotObject.transform.position - transform.position;
+            directionToPlanet.Normalize(); 
+
+            // Aplicar una fuerza
+
+            rb.AddForce(directionToPlanet * 
+                (pivotObject.transform.parent.GetComponent<GravityField>().gravity) * 
+                Time.fixedDeltaTime, ForceMode.Acceleration);
+            //Debug.Log(pivotObject.transform.parent);
+            //Debug.Log(pivotObject.transform.parent.GetComponent<GravityField>().gravity);
         }
+        
     }
 }
