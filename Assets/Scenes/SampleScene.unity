@@ -11116,9 +11116,11 @@ MonoBehaviour:
   currentEnergy: 90
   maxEnergy: 100
   energyRate: 1
+  companionExist: 0
   isFullEnergised: 0
   energyText: {fileID: 1291252476}
   energySlider: {fileID: 7768460}
+  planetController: {fileID: 794463346}
 --- !u!135 &2128079247
 SphereCollider:
   m_ObjectHideFlags: 0

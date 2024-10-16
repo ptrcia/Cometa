@@ -8,8 +8,8 @@ using UnityEngine.UI;
 public class EnergyManagement : MonoBehaviour
 {
     [Header("Energy")]
-    [SerializeField] float currentEnergy = 50;
-    [SerializeField] float maxEnergy = 100;
+    public float currentEnergy = 50;
+    public float maxEnergy = 100;
     [SerializeField] float energyRate = 1;
 
     public bool companionExist;
@@ -71,9 +71,6 @@ public class EnergyManagement : MonoBehaviour
                     planetController.SpawnCompanion();
                 }
             }
-
-
-
         }
 
         IEnumerator DecreaseEnergy()
@@ -86,6 +83,7 @@ public class EnergyManagement : MonoBehaviour
             }
 
         }
+
         IEnumerator IncreaseEnergy()
         {
 

@@ -15,6 +15,7 @@ public class CompanionController : MonoBehaviour
     void Start()
     {
         StartCoroutine(UpdateOffsetRandomly());
+        //quiero qu evaya con suavidad
     }
 
     void Update()
@@ -26,8 +27,11 @@ public class CompanionController : MonoBehaviour
     {
         while (true)
         {
-            offset = new Vector3(Random.Range(-2f, 2f), Random.Range(-1f, 1f), Random.Range(-2f, 2f));
-            yield return new WaitForSeconds(Random.Range(1f, 3f));
+            offset = new Vector3(
+                Random.Range(-10f, 10f), 
+                Random.Range(-5f, 5f), 
+                Random.Range(-10f, 10f));
+            yield return new WaitForSeconds(Random.Range(1f, 5f));
         }
     }
 

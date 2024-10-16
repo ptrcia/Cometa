@@ -45,30 +45,28 @@ public class PlanetController : MonoBehaviour
     }
     private void Update()
     {
-
         PlanetCount();
+        FirstAct();
     }
-    public void PlanetCount()
+    public int PlanetCount()
     {
         nameIsDifferent = true;
 
-        if (planetInteraction.pivotObject == null)
+        if (planetInteraction.pivotObject == null || planetInteraction == null)
         {
-            return;
-        }
-        if(planetInteraction == null)
-        {
-            return;
+            return 0;
         }
 
         currentPlanet = planetInteraction.pivotObject.transform.parent.gameObject;
 
-        foreach (GameObject obj in planetsOrbited)
+        for (int i = planetsOrbited.Count - 1; i >= 0; i--)
         {
+            GameObject obj = planetsOrbited[i];
+
             if (obj == null)
             {
-                //Debug.LogWarning("El objeto ha sido destruido y será eliminado de la lista.");
-                planetsOrbited.Remove(obj);
+                planetsOrbited.RemoveAt(i);
+
                 continue;
             }
             if (obj.name == "SpecialPlanetFirstAct")
@@ -87,15 +85,24 @@ public class PlanetController : MonoBehaviour
             planetsOrbited.Add(currentPlanet);
         }
 
+        //SECOND ACT
+        //if()
+        text.text = "Planet count -> " + planetsOrbited.Count;
 
+        return planetsOrbited.Count;
+    }
 
+    public void FirstAct()
+    {
         //FIRST ACT
         if (planetsOrbited.Count == firstAct)
         {
             isLost = true;
             planetGeneration.sphereCount = 0;
-            planetInteraction.isOrbiting = false;
-            planetInteraction.isBeingAttracted = false; 
+            //planetInteraction.isOrbiting = false;
+           planetInteraction.isBeingAttracted = false;
+            //planetInteraction.isOrbiting = true;
+            //planetInteraction.isBeingAttracted = true;
 
             //Spawn Special Planet
             if (!isInvoked)
@@ -106,19 +113,16 @@ public class PlanetController : MonoBehaviour
             }
 
             //Make planets materials tranparent
-            FadeAllPlanets(8f);
+           FadeAllPlanets(8f);
 
             //Delete satellites
             StartCoroutine(DeleteSatellites(5)); //deberia eliminarlos??????
 
             //Destroy Planets
-            StartCoroutine(DestroyPlanets(10));
-
-
-
+            StartCoroutine(DestroyPlanets(10));          
         }
-        text.text = "Planet count -> " + planetsOrbited.Count;
     }
+
     public void GenerateSpecialPlanet()
     {
         GameObject instance = Instantiate(specialPlanetFirstAct);
@@ -181,6 +185,10 @@ public class PlanetController : MonoBehaviour
     {
         yield return new WaitForSeconds(secondsToWait);
         planetInteraction.destructionTrigger.radius = 10;
+
+        planetInteraction.destructionTrigger.radius = 1000;
+        planetInteraction.isOrbiting = false;
+
     }
 
     public void SpawnCompanion()

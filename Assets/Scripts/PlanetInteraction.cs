@@ -73,7 +73,7 @@ public class PlanetInteraction : MonoBehaviour
     {
         if (collision.gameObject.CompareTag("PlanetOrbit"))
         {
-            Debug.Log("Exit collision with: " + collision.gameObject.name);
+            //Debug.Log("Exit collision with: " + collision.gameObject.name);
 
             cameraFollow.objectToFollow = this.gameObject;
             playerMovement.enabled = true;
@@ -88,7 +88,7 @@ public class PlanetInteraction : MonoBehaviour
         if (other.gameObject.CompareTag("PlanetAttractionField")) //el collider
         {
             pivotObject = other.gameObject;
-            Debug.Log("Player enter the gravity field of the: " + pivotObject.transform.parent.name);
+            //Debug.Log("Player enter the gravity field of the: " + pivotObject.transform.parent.name);
 
             isBeingAttracted = true;
             AttractToPlanet();
@@ -99,7 +99,7 @@ public class PlanetInteraction : MonoBehaviour
         // Si el cometa sale del campo gravitacional del planeta
         if (other.gameObject.CompareTag("PlanetAttractionField") && pivotObject != null)
         {
-            Debug.Log("Player exit the gravity field of the: " + pivotObject.transform.parent.name);
+            //Debug.Log("Player exit the gravity field of the: " + pivotObject.transform.parent.name);
 
             isBeingAttracted = false;
         }
@@ -128,11 +128,11 @@ public class PlanetInteraction : MonoBehaviour
                 (pivotObject.transform.parent.GetComponent<GravityField>().rotationSpeed
                 + playerMovement.currentSpeed) * Time.deltaTime);
         }
-        /*else if(pivotObject == null)
+        else if(pivotObject == null)
         {
-            Debug.Log("No encuentra el pivote en el Planet Interacrion");
+            //Debug.Log("No encuentra el pivote en el Planet Interacrion");
             return;
-        }*/
+        }
 
         if (isOrbiting && energyManagement.isFullEnergised)
         {
@@ -140,7 +140,6 @@ public class PlanetInteraction : MonoBehaviour
 
             if (Input.GetKey(KeyCode.Space))
             {
-                Debug.Log("Mantiene pulsado: " + KeyCode.Space);
                 holdSpace.SetActive(false);
                 releaseSpace.SetActive(true);
                 arrowPointer.enabled = true;
@@ -148,8 +147,6 @@ public class PlanetInteraction : MonoBehaviour
             }
             else if (Input.GetKeyUp(KeyCode.Space))
             {
-                Debug.Log("Suelta: " + KeyCode.Space);
-
                 ApplyImpulse();
                 arrowPointer.enabled = false;
                 isImpulsing = true;
@@ -200,6 +197,10 @@ public class PlanetInteraction : MonoBehaviour
                 Time.fixedDeltaTime, ForceMode.Acceleration);
             //Debug.Log(pivotObject.transform.parent);
             //Debug.Log(pivotObject.transform.parent.GetComponent<GravityField>().gravity);
+        }
+        else
+        {
+            Debug.Log("Mira me cago en dios");
         }
         
     }
