@@ -7,46 +7,61 @@ using UnityEngine;
 
 public class PlanetController : MonoBehaviour
 {
-    [Header("First Act")]
-    public int firstAct;
-    public bool isLost;    
-    public bool isSpecialPlanetEvoked;
-    public bool isInvoked;
-    [SerializeField] GameObject specialPlanetFirstAct;
-    [SerializeField] int distanceSpecialPlanet;
-    [SerializeField] GameObject companionPrefab;
 
     [Header("Planets Orbited")]
     [SerializeField] GameObject player;
     [SerializeField] TextMeshProUGUI text;
     [SerializeField] List<GameObject> planetsOrbited = new List<GameObject>();
 
-     [SerializeField] PlanetGeneration planetGeneration;
+    [Header("First Act")]
+    public int firstAct;
+    public bool isLost;
+    public bool isSpecialPlanetEvoked;
+    public bool isInvoked;
+    [SerializeField] GameObject specialPlanetFirstAct;
+    [SerializeField] int distanceSpawnSpecialPlanet;
+    [SerializeField] GameObject companionPrefab;
+    [SerializeField] int distanceMaintainSpecialPlanet = 800;
+    [SerializeField] bool firstActEnded;
+    private Vector3 lastPosition;
+    private GameObject specialPlanet;
+
+
+    [Header("Second Act")]
+    [SerializeField] int secondAct;
+
+    [SerializeField] PlanetGeneration planetGeneration;
+    [SerializeField] EnergyManagement energyManagement;
      PlanetInteraction planetInteraction;
 
-    private int inicialSphereCount;
-    private float inicialDestroyRadius;
+    private SphereCollider sphereColliderPlayer;
     private bool nameIsDifferent;
     private GameObject currentPlanet; // Planet currently being orbited
-
 
     private void Awake()
     {
         planetInteraction = player.GetComponent<PlanetInteraction>();
+        sphereColliderPlayer = player.GetComponent<SphereCollider>();
         player = GameObject.FindGameObjectWithTag("Player");
         isLost = false;
         isInvoked = false;
+        firstActEnded = false;
     }
-    private void Start()
-    {
 
-        inicialSphereCount = planetGeneration.sphereCount;
-        inicialDestroyRadius = planetInteraction.destructionTrigger.radius;
-    }
     private void Update()
     {
         PlanetCount();
         FirstAct();
+        KeepDistanceSpecialPlanet();
+
+        if (firstActEnded)
+        {
+            isLost = false;
+            planetGeneration.sphereCount = 15;
+            planetInteraction.isBeingAttracted = true;
+            SecondAct();
+        }
+
     }
     public int PlanetCount()
     {
@@ -85,24 +100,19 @@ public class PlanetController : MonoBehaviour
             planetsOrbited.Add(currentPlanet);
         }
 
-        //SECOND ACT
-        //if()
         text.text = "Planet count -> " + planetsOrbited.Count;
 
         return planetsOrbited.Count;
     }
 
-    public void FirstAct()
+    private void FirstAct()
     {
-        //FIRST ACT
         if (planetsOrbited.Count == firstAct)
         {
             isLost = true;
             planetGeneration.sphereCount = 0;
-            //planetInteraction.isOrbiting = false;
-           planetInteraction.isBeingAttracted = false;
-            //planetInteraction.isOrbiting = true;
-            //planetInteraction.isBeingAttracted = true;
+            planetInteraction.isBeingAttracted = false;
+
 
             //Spawn Special Planet
             if (!isInvoked)
@@ -119,15 +129,49 @@ public class PlanetController : MonoBehaviour
             StartCoroutine(DeleteSatellites(5)); //deberia eliminarlos??????
 
             //Destroy Planets
-            StartCoroutine(DestroyPlanets(10));          
+            StartCoroutine(DestroyPlanets(10));
+
+            //firstActEnded = true;
         }
     }
 
+    private void SecondAct()
+    {
+        //if (planetsOrbited.Count == secondAct)
+
+    }
+
+    private void KeepDistanceSpecialPlanet()
+    {
+        if (specialPlanet != null && !energyManagement.companionExist)
+        {
+            specialPlanet.transform.position = player.transform.position + new Vector3(distanceMaintainSpecialPlanet, 0, 0);
+            lastPosition = specialPlanet.transform.position;
+        }
+    }
     public void GenerateSpecialPlanet()
     {
-        GameObject instance = Instantiate(specialPlanetFirstAct);
-        instance.transform.position = player.transform.position + new Vector3
-            (player.transform.position.x+ distanceSpecialPlanet, 0, 0);
+
+        //Special Planet will be kept out of reach until the companion came.
+        specialPlanet = Instantiate(specialPlanetFirstAct);
+
+        if (specialPlanet == null) // Solo generar si no ha sido generado ya
+        {
+            specialPlanet = Instantiate(specialPlanetFirstAct);
+
+            if (!energyManagement.companionExist)
+            {
+                // Mantén la distancia inicial
+                specialPlanet.transform.position = player.transform.position + new Vector3(distanceMaintainSpecialPlanet, 0, 0);
+                lastPosition = specialPlanet.transform.position;
+            }
+            else
+            {
+                // Si ya existe el companion, el planeta se mantiene en su última posición
+                specialPlanet.transform.position = lastPosition;
+            }
+        }
+        //specialPlanet.transform.position = player.transform.position + new Vector3(player.transform.position.x+ distanceSpawnSpecialPlanet, 0, 0);
     }
 
     public IEnumerator DeleteSatellites(int secondsToWait)
@@ -184,11 +228,12 @@ public class PlanetController : MonoBehaviour
     private IEnumerator DestroyPlanets(int secondsToWait)
     {
         yield return new WaitForSeconds(secondsToWait);
-        planetInteraction.destructionTrigger.radius = 10;
+        sphereColliderPlayer.radius = 0.5f;
 
-        planetInteraction.destructionTrigger.radius = 1000;
+        yield return new WaitForSeconds(secondsToWait-7);
+
+        sphereColliderPlayer.radius = 1000f;
         planetInteraction.isOrbiting = false;
-
     }
 
     public void SpawnCompanion()

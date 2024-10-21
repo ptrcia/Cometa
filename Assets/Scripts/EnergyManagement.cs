@@ -10,12 +10,17 @@ public class EnergyManagement : MonoBehaviour
     [Header("Energy")]
     public float currentEnergy = 50;
     public float maxEnergy = 100;
+    public bool isFullEnergised;
     [SerializeField] float energyRate = 1;
 
+
+    [Header("Companion")]
     public bool companionExist;
-    public bool isFullEnergised;
-    [SerializeField] TextMeshProUGUI energyText;
+
+    [Header("UI")]
     [SerializeField] Slider energySlider;
+    [SerializeField] TextMeshProUGUI energyText;
+    [SerializeField] Image fillImageSlider;
 
     PlanetInteraction planetInteraction;
     PlayerMovement playerMovement;
@@ -26,7 +31,6 @@ public class EnergyManagement : MonoBehaviour
     {
         planetInteraction = GetComponent<PlanetInteraction>();
         playerMovement = GetComponent<PlayerMovement>();
-        //planetController = GetComponent<PlanetController>();
     }
     private void Start()
     {
@@ -78,6 +82,11 @@ public class EnergyManagement : MonoBehaviour
             while (!planetInteraction.isOrbiting && currentEnergy > 0)
             {
                 currentEnergy -= energyRate * Time.deltaTime * (playerMovement.currentSpeed * 0.01f);
+
+                // New Alpha
+                float newAlpha = Mathf.Clamp(currentEnergy / maxEnergy, 0, 1);
+                fillImageSlider.color = new Color(1, 1, 1, newAlpha);  // Usamos 1 para RGB y el alpha dinámico
+
                 yield return new WaitForSeconds(1);
                 isFullEnergised = false;
             }
@@ -94,6 +103,12 @@ public class EnergyManagement : MonoBehaviour
                 currentEnergy += energyRate * Time.deltaTime;
                 //Debug.Log("currentEnergy: " + currentEnergy + "// energyRate: " + energyRate + "// time: " + Time.deltaTime);
                 //imprimir
+
+                //alpha based on the actual energy value
+                float newAlpha = Mathf.Clamp(currentEnergy / maxEnergy, 0, 1);
+                fillImageSlider.color = new Color(1, 1, 1, newAlpha);
+
+
                 yield return wait;
             }
 
@@ -101,9 +116,10 @@ public class EnergyManagement : MonoBehaviour
             {
                 currentEnergy = maxEnergy;
                 isFullEnergised = true;
-                //UI iluminar y pulsar barra
+                fillImageSlider.color = new Color(1, 1, 1, 1);
             }
 
         }
+
     }
 }

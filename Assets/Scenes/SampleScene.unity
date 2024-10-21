@@ -209,7 +209,7 @@ MonoBehaviour:
   m_MinValue: 0
   m_MaxValue: 100
   m_WholeNumbers: 0
-  m_Value: 0
+  m_Value: 53.2
   m_OnValueChanged:
     m_PersistentCalls:
       m_Calls: []
@@ -1891,7 +1891,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 1, b: 1, a: 0.30588236}
+  m_Color: {r: 1, g: 1, b: 1, a: 0.050980393}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -2377,19 +2377,23 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fa75c75c93afdcf43b4b68a1a3b9d4e6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  player: {fileID: 2128079241}
+  text: {fileID: 1903925026}
+  planetsOrbited: []
   firstAct: 3
   isLost: 0
   isSpecialPlanetEvoked: 0
   isInvoked: 0
   specialPlanetFirstAct: {fileID: 1006589194174765092, guid: 12d79589fe3e48b4da0a7a3034ef0a38,
     type: 3}
-  distanceSpecialPlanet: 950
+  distanceSpawnSpecialPlanet: 0
   companionPrefab: {fileID: 2514291655108899208, guid: 07a0ff4a4e9a4e7458c630e9ce7cec49,
     type: 3}
-  player: {fileID: 2128079241}
-  text: {fileID: 1903925026}
-  planetsOrbited: []
+  distanceMaintainSpecialPlanet: 800
+  firstActEnded: 0
+  secondAct: 0
   planetGeneration: {fileID: 878562462}
+  energyManagement: {fileID: 2128079246}
 --- !u!4 &794463347
 Transform:
   m_ObjectHideFlags: 0
@@ -2617,10 +2621,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f123edf5dd60d3349a09150abec0c926, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  minDistanceBetweenPlanets: 50
+  minDistanceBetweenPlanets: 80
   sphereCount: 15
   satelliteCount: 0
-  maxRadius: 300
+  maxRadius: 450
   generationThreshold: 800
   destructionThreshold: 1000
   spheres: []
@@ -2634,6 +2638,7 @@ MonoBehaviour:
   trailMat:
   - {fileID: 2100000, guid: 9263fb1a00a2d424a9a3cf3d115b2067, type: 2}
   - {fileID: 2100000, guid: 595af23b600e0c247b4f54455c750335, type: 2}
+  sphereCollider: {fileID: 2128079247}
   player: {fileID: 2128079241}
 --- !u!4 &878562463
 Transform:
@@ -10120,8 +10125,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 10, y: 0}
+  m_AnchoredPosition: {x: 4.258087, y: 0}
+  m_SizeDelta: {x: 18.9163, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1841062648
 MonoBehaviour:
@@ -10136,7 +10141,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 1, b: 1, a: 0.69411767}
+  m_Color: {r: 1, g: 1, b: 1, a: 0.3137255}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -11046,7 +11051,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   speedRot: 2
-  maxSpeed: 60
+  maxSpeed: 40
   acceleration: 10
   deceleration: 10
   currentSpeed: 0
@@ -11093,13 +11098,12 @@ MonoBehaviour:
   pivotObject: {fileID: 0}
   isOrbiting: 0
   isImpulsing: 0
-  impulseForce: 70
+  impulseForce: 80
   deceleration: 0.5
   arrowPointer: {fileID: 1699573340}
   holdSpace: {fileID: 1128291792}
   releaseSpace: {fileID: 93516557}
   isBeingAttracted: 0
-  destructionTrigger: {fileID: 0}
   planetGeneration: {fileID: 878562462}
 --- !u!114 &2128079246
 MonoBehaviour:
@@ -11115,11 +11119,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   currentEnergy: 90
   maxEnergy: 100
+  isFullEnergised: 0
   energyRate: 1
   companionExist: 0
-  isFullEnergised: 0
-  energyText: {fileID: 1291252476}
   energySlider: {fileID: 7768460}
+  energyText: {fileID: 1291252476}
+  fillImageSlider: {fileID: 1841062648}
   planetController: {fileID: 794463346}
 --- !u!135 &2128079247
 SphereCollider:
@@ -11140,7 +11145,7 @@ SphereCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Radius: 0.5
+  m_Radius: 1000
   m_Center: {x: 0, y: 0, z: 0}
 --- !u!114 &2128079248
 MonoBehaviour:

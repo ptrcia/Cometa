@@ -8,7 +8,7 @@ public class PlanetGeneration : MonoBehaviour
     public int minDistanceBetweenPlanets = 50;
     public int sphereCount;
     public int satelliteCount;
-    public int maxRadius;
+    public int maxRadius; //radio os generation
     public float generationThreshold; // Distance to generate new planets
     public float destructionThreshold; // Distance to destroy far away planets
 
@@ -18,6 +18,7 @@ public class PlanetGeneration : MonoBehaviour
     public Material[] matsSatellites;
     public Material[] trailMat;
 
+    [SerializeField] SphereCollider sphereCollider;
     [SerializeField] GameObject player;
 
     private Vector3 lastPlayerPosition;
@@ -37,6 +38,9 @@ public class PlanetGeneration : MonoBehaviour
 
     private void Update()
     {
+        destructionThreshold = sphereCollider.radius;
+
+
         // Check distance player
         if (Vector3.Distance(player.transform.position, lastPlayerPosition) > generationThreshold)
         {
@@ -44,7 +48,6 @@ public class PlanetGeneration : MonoBehaviour
             spheres = CreateSpheres(sphereCount, maxRadius);
             lastPlayerPosition = player.transform.position;
         }
-
     }
 
     public GameObject[] CreateSpheres(int count, int radius)

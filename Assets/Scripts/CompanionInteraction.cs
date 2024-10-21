@@ -1,18 +1,22 @@
 using System.Collections;
 using System.Collections.Generic;
-using Unity.VisualScripting;
 using UnityEngine;
 
 public class CompanionInteraction : MonoBehaviour
 {
-    bool isCollidingCompanion= false;
+    bool isCollidingCompanion = false;
     private GameObject companion;
     EnergyManagement energyManagement;
+    PlanetInteraction planetInteracion;
+    PlayerMovement playerMovement;
 
     private void Awake()
     {
         energyManagement = GetComponent<EnergyManagement>();
+        planetInteracion = GetComponent<PlanetInteraction>();
+        playerMovement = GetComponent<PlayerMovement>();
     }
+
     private void Update()
     {
         FindCompanion();
@@ -31,7 +35,12 @@ public class CompanionInteraction : MonoBehaviour
         if (other.gameObject.CompareTag("CompanionEnergy")) //el collider
         {
             isCollidingCompanion = true;
-            StartCoroutine(IncreaseEnergy());
+            //planetInteracion.isOrbiting = true;
+            //this does not work
+            //playerMovement.canMove = true;
+           
+            
+            //StartCoroutine(IncreaseEnergy());
         }
     }
     private void OnTriggerExit(Collider other)
@@ -39,6 +48,7 @@ public class CompanionInteraction : MonoBehaviour
         if (other.gameObject.CompareTag("CompanionEnergy")) //el collider
         {
             isCollidingCompanion = false;
+            //planetInteracion.isOrbiting=false;
         }
     }
 

@@ -1,12 +1,17 @@
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using Unity.VisualScripting;
 using UnityEngine;
 
 public class CompanionController : MonoBehaviour
 {
+
+    [SerializeField] float smoothSpeed  = 0.3f;
+
     private GameObject player;
     private Vector3 offset;
+    private Vector3 targetPosition;
 
     private void Awake()
     {
@@ -15,12 +20,11 @@ public class CompanionController : MonoBehaviour
     void Start()
     {
         StartCoroutine(UpdateOffsetRandomly());
-        //quiero qu evaya con suavidad
     }
-
-    void Update()
+    void FixedUpdate()
     {
-        transform.position = player.transform.position + offset;
+        targetPosition = player.transform.position + offset;
+        transform.position = Vector3.Lerp(transform.position, targetPosition, smoothSpeed);
     }
 
     IEnumerator UpdateOffsetRandomly()
@@ -28,9 +32,9 @@ public class CompanionController : MonoBehaviour
         while (true)
         {
             offset = new Vector3(
-                Random.Range(-10f, 10f), 
+                Random.Range(-5, 5), 
                 Random.Range(-5f, 5f), 
-                Random.Range(-10f, 10f));
+                Random.Range(-5, 5));
             yield return new WaitForSeconds(Random.Range(1f, 5f));
         }
     }

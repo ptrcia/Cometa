@@ -19,7 +19,7 @@ public class PlanetInteraction : MonoBehaviour
 
     [Header("Gravity")]
     public bool isBeingAttracted;
-    public SphereCollider destructionTrigger;
+    //public SphereCollider destructionTrigger;
 
     PlayerMovement playerMovement;
     CameraFollow cameraFollow;
@@ -36,7 +36,7 @@ public class PlanetInteraction : MonoBehaviour
         rb = GetComponent<Rigidbody>();
         energyManagement = GetComponent<EnergyManagement>();
         gravityField = GetComponent<GravityField>();
-        destructionTrigger = GetComponent<SphereCollider>();
+        //destructionTrigger = GetComponent<SphereCollider>();
     }
 
     private void Start()
@@ -47,7 +47,7 @@ public class PlanetInteraction : MonoBehaviour
 
         randomAxis = Random.onUnitSphere;
 
-        destructionTrigger.radius = planetGeneration.destructionThreshold;
+        //destructionTrigger.radius = planetGeneration.destructionThreshold;
 
     }
 
@@ -55,7 +55,7 @@ public class PlanetInteraction : MonoBehaviour
     {
         if (collision.gameObject.CompareTag("PlanetOrbit"))
         {
-            pivotObject = collision.gameObject; // Guardar el planeta como objeto pivote
+            pivotObject = collision.gameObject;
             //Debug.Log("Entered collision with: " + pivotObject.transform.parent.name);
 
             //playerMovement.enabled = false;
@@ -66,7 +66,7 @@ public class PlanetInteraction : MonoBehaviour
 
             //cameraFollow.objectToFollow = pivotObject;  //ya veremos
             
-            isOrbiting = true; // Activar estado de orbitar
+            isOrbiting = true;
         }
     }
     private void OnCollisionExit(Collision collision)
@@ -96,7 +96,6 @@ public class PlanetInteraction : MonoBehaviour
     }
     private void OnTriggerExit(Collider other)
     {
-        // Si el cometa sale del campo gravitacional del planeta
         if (other.gameObject.CompareTag("PlanetAttractionField") && pivotObject != null)
         {
             //Debug.Log("Player exit the gravity field of the: " + pivotObject.transform.parent.name);
