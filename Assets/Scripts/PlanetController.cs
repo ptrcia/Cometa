@@ -16,23 +16,25 @@ public class PlanetController : MonoBehaviour
     [Header("First Act")]
     public int firstAct;
     public bool isLost;
-    public bool isSpecialPlanetEvoked;
+    //public bool isSpecialPlanetEvoked;
     public bool isInvoked;
     [SerializeField] GameObject specialPlanetFirstAct;
     [SerializeField] int distanceSpawnSpecialPlanet;
     [SerializeField] GameObject companionPrefab;
     [SerializeField] int distanceMaintainSpecialPlanet = 800;
-    [SerializeField] bool firstActEnded;
+    public bool firstActEnded;
     private Vector3 lastPosition;
     private GameObject specialPlanet;
 
 
     [Header("Second Act")]
     [SerializeField] int secondAct;
+    [SerializeField] bool secondActPrepared;
+    [SerializeField] bool secondActStarted;
 
     [SerializeField] PlanetGeneration planetGeneration;
     [SerializeField] EnergyManagement energyManagement;
-     PlanetInteraction planetInteraction;
+    PlanetInteraction planetInteraction;
 
     private SphereCollider sphereColliderPlayer;
     private bool nameIsDifferent;
@@ -46,20 +48,28 @@ public class PlanetController : MonoBehaviour
         isLost = false;
         isInvoked = false;
         firstActEnded = false;
+        secondActPrepared = false;
+        secondAct = 5;
     }
 
     private void Update()
     {
+        Debug.Log("orbited: " + planetsOrbited.Count + "/" + secondAct);
         PlanetCount();
         FirstAct();
         KeepDistanceSpecialPlanet();
 
-        if (firstActEnded)
+        if (firstActEnded && !secondActPrepared)
         {
+            Debug.Log("Road to segundo acto");
+            
             isLost = false;
-            planetGeneration.sphereCount = 15;
-            planetInteraction.isBeingAttracted = true;
+            planetGeneration.canGenerate = true;
+            planetGeneration.Generate();
+            Debug.Log(planetGeneration.sphereCount);
+            secondActPrepared = true;
             SecondAct();
+
         }
 
     }
@@ -84,10 +94,10 @@ public class PlanetController : MonoBehaviour
 
                 continue;
             }
-            if (obj.name == "SpecialPlanetFirstAct")
+           /* if (obj.name == "SpecialPlanetFirstAct")
             {
                 continue;
-            }
+            }*/
             if (obj == currentPlanet)
             {
                 nameIsDifferent = false;
@@ -110,35 +120,62 @@ public class PlanetController : MonoBehaviour
         if (planetsOrbited.Count == firstAct)
         {
             isLost = true;
-            planetGeneration.sphereCount = 0;
-            planetInteraction.isBeingAttracted = false;
-
+            //planetGeneration.sphereCount = 0;
+            planetGeneration.canGenerate = false;
 
             //Spawn Special Planet
             if (!isInvoked)
             {
                 Invoke("GenerateSpecialPlanet", 5);
-                isSpecialPlanetEvoked = true;
+                //isSpecialPlanetEvoked = true;
                 isInvoked = true;
             }
 
+            //PENSAR 
             //Make planets materials tranparent
-           FadeAllPlanets(8f);
+           //FadeAllPlanets(8f);
 
-            //Delete satellites
-            StartCoroutine(DeleteSatellites(5)); //deberia eliminarlos??????
+            //Delete satellites & planets
+            //StartCoroutine(DeleteSatellites(5));
 
-            //Destroy Planets
-            StartCoroutine(DestroyPlanets(10));
+            //The change to Act2 is controlled by PlanetInteraction Collidar
 
-            //firstActEnded = true;
         }
     }
 
     private void SecondAct()
     {
-        //if (planetsOrbited.Count == secondAct)
 
+        //spawn planeta raro
+        if (planetsOrbited.Count == secondAct) //??
+        {
+            Debug.Log("Evento Segundo Acto");
+            
+
+        }
+
+
+    }
+    public void DestroyAllPlanets()
+    {
+        List<GameObject> planetsToRemove = new List<GameObject>();
+
+        foreach (GameObject planet in planetGeneration.generatedPlanets)
+        {
+            if (planet != null)
+            {
+                Destroy(planet);
+                planetsToRemove.Add(planet);
+            }
+        }
+
+        foreach (GameObject planet in planetsToRemove)
+        {
+            planetGeneration.generatedPlanets.Remove(planet);
+        }
+        planetGeneration.generatedPlanets.RemoveAll(planet => planet == null);
+
+        Debug.Log("Todos los planetas han sido destruidos.");
     }
 
     private void KeepDistanceSpecialPlanet()
@@ -188,6 +225,9 @@ public class PlanetController : MonoBehaviour
             Destroy(satellite);
             yield return new WaitForSeconds(secondsToWait);
         }
+        planetInteraction.holdSpace.SetActive(false);
+        planetInteraction.releaseSpace.SetActive(false);
+        DestroyAllPlanets();
         
     }
     public void FadeAllPlanets(float duration)
@@ -225,15 +265,26 @@ public class PlanetController : MonoBehaviour
         planetMaterial.color = new Color(originalColor.r, originalColor.g, originalColor.b, targetAlpha);
     }
 
-    private IEnumerator DestroyPlanets(int secondsToWait)
+    //esto no funciona porque los creo después
+    private IEnumerator AppearFromTranslucent(GameObject planet, float fadeDuration)
     {
-        yield return new WaitForSeconds(secondsToWait);
-        sphereColliderPlayer.radius = 0.5f;
+        Material planetMaterial = planet.GetComponentInParent<Renderer>().material;
+        Color originalColor = planetMaterial.color;
+        float startAlpha = originalColor.a;
+        float targetAlpha = 1f;
+        float elapsedTime = 0f;
 
-        yield return new WaitForSeconds(secondsToWait-7);
+        while (elapsedTime < fadeDuration)
+        {
+            elapsedTime += Time.deltaTime;
+            float newAlpha = Mathf.Lerp(startAlpha, targetAlpha, elapsedTime / fadeDuration);
 
-        sphereColliderPlayer.radius = 1000f;
-        planetInteraction.isOrbiting = false;
+            planetMaterial.color = new Color(originalColor.r, originalColor.g, originalColor.b, newAlpha);
+
+            yield return null;
+        }
+
+        planetMaterial.color = new Color(originalColor.r, originalColor.g, originalColor.b, targetAlpha);
     }
 
     public void SpawnCompanion()

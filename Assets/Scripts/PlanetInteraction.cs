@@ -14,8 +14,8 @@ public class PlanetInteraction : MonoBehaviour
     [SerializeField] int impulseForce = 70;
     [SerializeField] float deceleration = 0.5f;
     [SerializeField] SpriteRenderer arrowPointer;
-    [SerializeField] GameObject holdSpace;
-    [SerializeField] GameObject releaseSpace;
+    public GameObject holdSpace;
+    public GameObject releaseSpace;
 
     [Header("Gravity")]
     public bool isBeingAttracted;
@@ -27,6 +27,7 @@ public class PlanetInteraction : MonoBehaviour
     EnergyManagement energyManagement;
     GravityField gravityField;
     [SerializeField] PlanetGeneration planetGeneration;
+    [SerializeField]PlanetController planetController;
     private Vector3 randomAxis;
 
     private void Awake()
@@ -46,9 +47,6 @@ public class PlanetInteraction : MonoBehaviour
         releaseSpace.SetActive(false);
 
         randomAxis = Random.onUnitSphere;
-
-        //destructionTrigger.radius = planetGeneration.destructionThreshold;
-
     }
 
     private void OnCollisionEnter(Collision collision)
@@ -56,9 +54,14 @@ public class PlanetInteraction : MonoBehaviour
         if (collision.gameObject.CompareTag("PlanetOrbit"))
         {
             pivotObject = collision.gameObject;
-            //Debug.Log("Entered collision with: " + pivotObject.transform.parent.name);
+            Debug.Log("Entered collision with: " + pivotObject.transform.parent.name);
 
-            //playerMovement.enabled = false;
+            //SECOND ACT
+            if(!planetController.firstActEnded && pivotObject.transform.parent.name == "SpecialPlanetFirstAct(Clone)")
+            {
+                planetController.firstActEnded = true;
+            }
+
             playerMovement.currentSpeed = 0;
             
             rb.useGravity = false;

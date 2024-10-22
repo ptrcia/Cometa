@@ -11,6 +11,9 @@ public class PlanetGeneration : MonoBehaviour
     public int maxRadius; //radio os generation
     public float generationThreshold; // Distance to generate new planets
     public float destructionThreshold; // Distance to destroy far away planets
+    public bool canGenerate;
+
+    public List<GameObject> generatedPlanets;
 
 
     public GameObject[] spheres;
@@ -34,20 +37,26 @@ public class PlanetGeneration : MonoBehaviour
     {
         lastPlayerPosition = player.transform.position;
         spheres = CreateSpheres(sphereCount, maxRadius);
+        canGenerate = true;
     }
 
     private void Update()
     {
         destructionThreshold = sphereCollider.radius;
 
-
-        // Check distance player
-        if (Vector3.Distance(player.transform.position, lastPlayerPosition) > generationThreshold)
+        if (canGenerate && Vector3.Distance(player.transform.position, lastPlayerPosition) > generationThreshold)
         {
             //Generate new planets
+            Generate();
+
+        }
+        // Check distance player
+
+    }
+    public void Generate()
+    {
             spheres = CreateSpheres(sphereCount, maxRadius);
             lastPlayerPosition = player.transform.position;
-        }
     }
 
     public GameObject[] CreateSpheres(int count, int radius)
@@ -128,10 +137,11 @@ public class PlanetGeneration : MonoBehaviour
             colliderAtraction.isTrigger = true;
             colliderAtraction.radius = Random.Range(collider.radius + 30, collider.radius + 60);     
 
+
+
+            generatedPlanets.Add(sp);
         }
-
         GameObject.Destroy(sphereToCopy);
-
         return spheres;
     }
 

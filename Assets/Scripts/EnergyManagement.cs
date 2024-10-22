@@ -11,7 +11,7 @@ public class EnergyManagement : MonoBehaviour
     public float currentEnergy = 50;
     public float maxEnergy = 100;
     public bool isFullEnergised;
-    [SerializeField] float energyRate = 1;
+    public float energyRate = 1;
 
 
     [Header("Companion")]
@@ -24,6 +24,7 @@ public class EnergyManagement : MonoBehaviour
 
     PlanetInteraction planetInteraction;
     PlayerMovement playerMovement;
+    CompanionInteraction companionInteraction;
     [SerializeField] PlanetController planetController;
 
 
@@ -31,6 +32,7 @@ public class EnergyManagement : MonoBehaviour
     {
         planetInteraction = GetComponent<PlanetInteraction>();
         playerMovement = GetComponent<PlayerMovement>();
+        companionInteraction = GetComponent<CompanionInteraction>();
     }
     private void Start()
     {
@@ -53,7 +55,7 @@ public class EnergyManagement : MonoBehaviour
                 StartCoroutine(IncreaseEnergy());
             }
         }
-        else
+        else 
         {
             if (currentEnergy > 0)
             {
@@ -61,18 +63,22 @@ public class EnergyManagement : MonoBehaviour
                 StartCoroutine(DecreaseEnergy());
 
             }
-            else if (currentEnergy <= 0 && !planetController.isSpecialPlanetEvoked)
+
+            //INVOKED TODO BIEN???????????
+            else if (currentEnergy <= 0 && !planetController.isInvoked)
             {
                 //GameManager.instanciate.GameOver();
                 Debug.Log("It's game over.");
             }
-            else if (currentEnergy <= 0 && planetController.isSpecialPlanetEvoked)
+            else if (currentEnergy <= 0 && planetController.isInvoked)
             {
                 playerMovement.canMove = false;               
                 if(!companionExist)
                 {
                     companionExist = true;
                     planetController.SpawnCompanion();
+                    energyRate = 0;
+                    //IMPORTANTE
                 }
             }
         }
