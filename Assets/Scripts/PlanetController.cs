@@ -12,11 +12,12 @@ public class PlanetController : MonoBehaviour
     [SerializeField] GameObject player;
     [SerializeField] TextMeshProUGUI text;
     [SerializeField] List<GameObject> planetsOrbited = new List<GameObject>();
+    [SerializeField] bool isCountingEnabled = true;
+
 
     [Header("First Act")]
     public int firstAct;
     public bool isLost;
-    //public bool isSpecialPlanetEvoked;
     public bool isInvoked;
     [SerializeField] GameObject specialPlanetFirstAct;
     [SerializeField] int distanceSpawnSpecialPlanet;
@@ -31,7 +32,11 @@ public class PlanetController : MonoBehaviour
     [SerializeField] int secondAct;
     [SerializeField] bool secondActPrepared;
     [SerializeField] bool secondActStarted;
+    [SerializeField] bool isInvokedDeadly;
+    [SerializeField] GameObject deadlyPlanetSecondAct;
+    private GameObject deadlyPlanet;
 
+    [Header("Managers")]
     [SerializeField] PlanetGeneration planetGeneration;
     [SerializeField] EnergyManagement energyManagement;
     PlanetInteraction planetInteraction;
@@ -45,11 +50,11 @@ public class PlanetController : MonoBehaviour
         planetInteraction = player.GetComponent<PlanetInteraction>();
         sphereColliderPlayer = player.GetComponent<SphereCollider>();
         player = GameObject.FindGameObjectWithTag("Player");
-        isLost = false;
         isInvoked = false;
         firstActEnded = false;
         secondActPrepared = false;
-        secondAct = 5;
+        secondAct = 3;
+        isInvokedDeadly = false;
     }
 
     private void Update()
@@ -62,19 +67,29 @@ public class PlanetController : MonoBehaviour
         if (firstActEnded && !secondActPrepared)
         {
             Debug.Log("Road to segundo acto");
-            
-            isLost = false;
+
+            ResetPlanetCount();
+            isCountingEnabled = true;
+
             planetGeneration.canGenerate = true;
             planetGeneration.Generate();
-            Debug.Log(planetGeneration.sphereCount);
             secondActPrepared = true;
-            SecondAct();
-
         }
+        if (planetsOrbited.Count == secondAct)
+        {
+            Debug.Log("Evento Segundo Acto");
+            SecondAct();
+        }
+
+        
 
     }
     public int PlanetCount()
     {
+        if (!isCountingEnabled)
+        {
+            return planetsOrbited.Count; // Si no está habilitado el conteo, simplemente retornamos el conteo actual sin hacer nada.
+        }
         nameIsDifferent = true;
 
         if (planetInteraction.pivotObject == null || planetInteraction == null)
@@ -94,10 +109,10 @@ public class PlanetController : MonoBehaviour
 
                 continue;
             }
-           /* if (obj.name == "SpecialPlanetFirstAct")
-            {
-                continue;
-            }*/
+            /* if (obj.name == "SpecialPlanetFirstAct")
+             {
+                 continue;
+             }*/
             if (obj == currentPlanet)
             {
                 nameIsDifferent = false;
@@ -119,21 +134,24 @@ public class PlanetController : MonoBehaviour
     {
         if (planetsOrbited.Count == firstAct)
         {
-            isLost = true;
-            //planetGeneration.sphereCount = 0;
+
             planetGeneration.canGenerate = false;
+            //SetCountingEnabled(false);
+            if (!firstActEnded)
+            {
+                isCountingEnabled = false;
+            }
 
             //Spawn Special Planet
             if (!isInvoked)
             {
                 Invoke("GenerateSpecialPlanet", 5);
-                //isSpecialPlanetEvoked = true;
                 isInvoked = true;
             }
 
             //PENSAR 
             //Make planets materials tranparent
-           //FadeAllPlanets(8f);
+            //FadeAllPlanets(8f);
 
             //Delete satellites & planets
             //StartCoroutine(DeleteSatellites(5));
@@ -145,15 +163,15 @@ public class PlanetController : MonoBehaviour
 
     private void SecondAct()
     {
-
-        //spawn planeta raro
-        if (planetsOrbited.Count == secondAct) //??
+        Debug.Log("Entrado");
+        secondActStarted = true;
+        if (!isInvokedDeadly)
         {
-            Debug.Log("Evento Segundo Acto");
-            
-
+            Invoke("GenerateDeathlyPlanet", 5);
+            isInvokedDeadly = true; 
         }
 
+        planetGeneration.canGenerate = false;
 
     }
     public void DestroyAllPlanets()
@@ -192,23 +210,32 @@ public class PlanetController : MonoBehaviour
         //Special Planet will be kept out of reach until the companion came.
         specialPlanet = Instantiate(specialPlanetFirstAct);
 
-        if (specialPlanet == null) // Solo generar si no ha sido generado ya
+        if (specialPlanet == null) 
         {
             specialPlanet = Instantiate(specialPlanetFirstAct);
 
             if (!energyManagement.companionExist)
             {
-                // Mantén la distancia inicial
                 specialPlanet.transform.position = player.transform.position + new Vector3(distanceMaintainSpecialPlanet, 0, 0);
                 lastPosition = specialPlanet.transform.position;
             }
             else
             {
-                // Si ya existe el companion, el planeta se mantiene en su última posición
                 specialPlanet.transform.position = lastPosition;
             }
         }
-        //specialPlanet.transform.position = player.transform.position + new Vector3(player.transform.position.x+ distanceSpawnSpecialPlanet, 0, 0);
+    }
+
+    public void GenerateDeathlyPlanet()
+    {
+        deadlyPlanet = Instantiate(deadlyPlanetSecondAct);
+
+        if (deadlyPlanet == null) 
+        {
+            deadlyPlanet = Instantiate(deadlyPlanetSecondAct);
+            deadlyPlanet.transform.position = player.transform.position + new Vector3(
+                distanceMaintainSpecialPlanet-100, 0, 0);
+        }
     }
 
     public IEnumerator DeleteSatellites(int secondsToWait)
@@ -291,5 +318,13 @@ public class PlanetController : MonoBehaviour
     {
         Instantiate(companionPrefab, Vector3.zero, Quaternion.identity);
     }
+    public void ResetPlanetCount()
+    {
+        Debug.Log("Antes de limpiar la lista: " + planetsOrbited.Count);
+        planetsOrbited.Clear();
+        Debug.Log("Después de limpiar la lista: " + planetsOrbited.Count);
+        text.text = "Planet count-> " + planetsOrbited.Count;
+    }
+
 }
 

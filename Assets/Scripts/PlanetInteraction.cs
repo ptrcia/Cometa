@@ -5,8 +5,7 @@ using UnityEngine;
 public class PlanetInteraction : MonoBehaviour
 {
     [Header("Orbitation")]
-    public GameObject pivotObject = null;
-    
+    public GameObject pivotObject = null; 
     public bool isOrbiting = false; // Para saber si el jugador está en órbita
 
     [Header("Impulse")]
@@ -24,11 +23,15 @@ public class PlanetInteraction : MonoBehaviour
     PlayerMovement playerMovement;
     CameraFollow cameraFollow;
     Rigidbody rb;
+    [Header("Managers")]
     EnergyManagement energyManagement;
     GravityField gravityField;
+    ExplodeSphere explodeSphere;
     [SerializeField] PlanetGeneration planetGeneration;
     [SerializeField]PlanetController planetController;
-    private Vector3 randomAxis;
+
+     Vector3 randomAxis;
+
 
     private void Awake()
     {
@@ -71,6 +74,19 @@ public class PlanetInteraction : MonoBehaviour
             
             isOrbiting = true;
         }
+
+        //deadlyplanet
+        if (collision.gameObject.CompareTag("DeadlyPlanetOrbit"))
+        {
+            playerMovement.currentSpeed = 0;
+            Debug.Log("A EXPLOTAR");
+            
+            explodeSphere = pivotObject.transform.parent.GetComponent<ExplodeSphere>();
+
+            //Explode
+            //explodeSphere.explode = true;
+
+        }
     }
     private void OnCollisionExit(Collision collision)
     {
@@ -101,12 +117,8 @@ public class PlanetInteraction : MonoBehaviour
     {
         if (other.gameObject.CompareTag("PlanetAttractionField") && pivotObject != null)
         {
-            //Debug.Log("Player exit the gravity field of the: " + pivotObject.transform.parent.name);
-
             isBeingAttracted = false;
         }
-
-        //ESTO NO LO ENTIENDO
         if (other.CompareTag("Planet")) //destroy planets
         {
             Destroy(other.gameObject);
