@@ -8,4 +8,7 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/1-SpaceScene.unity
     guid: 99c9720ab356a0642a771bea13969a05
+  - enabled: 1
+    path: Assets/Scenes/2-Hospital.unity
+    guid: d936d1b7bce86c343bedd9d691451ffc
   m_configObjects: {}

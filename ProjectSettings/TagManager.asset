@@ -11,6 +11,7 @@ TagManager:
   - CompanionEnergy
   - Companion
   - DeadlyPlanetOrbit
+  - FadeOutPanel
   layers:
   - Default
   - TransparentFX

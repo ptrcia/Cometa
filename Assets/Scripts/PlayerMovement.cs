@@ -14,6 +14,16 @@ public class PlayerMovement : MonoBehaviour
     private float inputVertical;
     private float inputHorizontal;
 
+
+
+    [Header("Audio")]
+    [SerializeField] private float minPitch = 0.5f;  // Tono mínimo
+    [SerializeField] private float maxPitch = 2.0f;  // Tono máximo
+    [SerializeField] private float fadeSpeed = 2.0f; // Velocidad de transición de audio
+    private float targetPitch;                       // Tono objetivo
+    private float targetVolume;                      // Volumen objetivo
+    [SerializeField] AudioClip accelerationSound;
+
     PlanetInteraction planetInteraction;
 
     private void Awake()
@@ -54,11 +64,24 @@ public class PlayerMovement : MonoBehaviour
         if (inputVertical != 0 || inputHorizontal != 0)
         {
             currentSpeed += acceleration * Time.fixedDeltaTime;
+
+            float targetVolume = Mathf.Lerp(AudioManager.instance.SFXSource.volume, 1f, Time.fixedDeltaTime * 2f);
+            AudioManager.instance.SetSFXVolume(targetVolume);
+
+            if (!AudioManager.instance.SFXSource.isPlaying)
+            {
+                AudioManager.instance.PlaySound(accelerationSound);
+                AudioManager.instance.SFXSource.loop = true;
+            }
+
         }
         else
         {
             // Desaceleración cuando no hay input
             currentSpeed -= deceleration * Time.fixedDeltaTime;
+
+            float targetVolume = Mathf.Lerp(AudioManager.instance.SFXSource.volume, 0.3f, Time.fixedDeltaTime * 2f);
+            AudioManager.instance.SetSFXVolume(targetVolume);
         }
 
         // Limitar velocidad
@@ -71,8 +94,8 @@ public class PlayerMovement : MonoBehaviour
             currentSpeed = 0;
         }
 
-        // Mover el objeto según la velocidad actual
-        Vector3 velocity = transform.forward * currentSpeed;
+    // Mover el objeto según la velocidad actual
+    Vector3 velocity = transform.forward * currentSpeed;
 
         GetComponent<Rigidbody>().velocity = velocity;
     }

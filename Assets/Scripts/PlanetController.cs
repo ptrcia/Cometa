@@ -1,7 +1,5 @@
 using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
-using System.Net;
 using TMPro;
 using UnityEngine;
 
@@ -31,7 +29,6 @@ public class PlanetController : MonoBehaviour
     [Header("Second Act")]
     [SerializeField] int secondAct;
     [SerializeField] bool secondActPrepared;
-    [SerializeField] bool secondActStarted;
     [SerializeField] bool isInvokedDeadly;
     [SerializeField] GameObject deadlyPlanetSecondAct;
     private GameObject deadlyPlanet;
@@ -125,7 +122,7 @@ public class PlanetController : MonoBehaviour
             planetsOrbited.Add(currentPlanet);
         }
 
-        text.text = "Planet count -> " + planetsOrbited.Count;
+        //text.text = "Planet count -> " + planetsOrbited.Count;
 
         return planetsOrbited.Count;
     }
@@ -134,9 +131,7 @@ public class PlanetController : MonoBehaviour
     {
         if (planetsOrbited.Count == firstAct)
         {
-
             planetGeneration.canGenerate = false;
-            //SetCountingEnabled(false);
             if (!firstActEnded)
             {
                 isCountingEnabled = false;
@@ -164,36 +159,12 @@ public class PlanetController : MonoBehaviour
     private void SecondAct()
     {
         Debug.Log("Entrado");
-        secondActStarted = true;
         if (!isInvokedDeadly)
         {
             Invoke("GenerateDeathlyPlanet", 5);
             isInvokedDeadly = true; 
         }
-
         planetGeneration.canGenerate = false;
-
-    }
-    public void DestroyAllPlanets()
-    {
-        List<GameObject> planetsToRemove = new List<GameObject>();
-
-        foreach (GameObject planet in planetGeneration.generatedPlanets)
-        {
-            if (planet != null)
-            {
-                Destroy(planet);
-                planetsToRemove.Add(planet);
-            }
-        }
-
-        foreach (GameObject planet in planetsToRemove)
-        {
-            planetGeneration.generatedPlanets.Remove(planet);
-        }
-        planetGeneration.generatedPlanets.RemoveAll(planet => planet == null);
-
-        Debug.Log("Todos los planetas han sido destruidos.");
     }
 
     private void KeepDistanceSpecialPlanet()
@@ -233,14 +204,15 @@ public class PlanetController : MonoBehaviour
         if (deadlyPlanet == null) 
         {
             deadlyPlanet = Instantiate(deadlyPlanetSecondAct);
-            deadlyPlanet.transform.position = player.transform.position + new Vector3(
-                distanceMaintainSpecialPlanet-100, 0, 0);
+
         }
+        deadlyPlanet.transform.position = player.transform.position + new Vector3(
+            distanceMaintainSpecialPlanet, 0, 0);
     }
 
     public IEnumerator DeleteSatellites(int secondsToWait)
     {
-        
+        Debug.Log("Delete all satellites?");
         GameObject[] satellites = GameObject.FindGameObjectsWithTag("Satellite");
         if (satellites.Length == 0)
         {
@@ -256,6 +228,27 @@ public class PlanetController : MonoBehaviour
         planetInteraction.releaseSpace.SetActive(false);
         DestroyAllPlanets();
         
+    }
+    public void DestroyAllPlanets()
+    {
+        List<GameObject> planetsToRemove = new List<GameObject>();
+
+        foreach (GameObject planet in planetGeneration.generatedPlanets)
+        {
+            if (planet != null)
+            {
+                Destroy(planet);
+                planetsToRemove.Add(planet);
+            }
+        }
+
+        foreach (GameObject planet in planetsToRemove)
+        {
+            planetGeneration.generatedPlanets.Remove(planet);
+        }
+        planetGeneration.generatedPlanets.RemoveAll(planet => planet == null);
+
+        Debug.Log("Todos los planetas han sido destruidos.");
     }
     public void FadeAllPlanets(float duration)
     {
@@ -277,28 +270,6 @@ public class PlanetController : MonoBehaviour
         Color originalColor = planetMaterial.color;
         float startAlpha = originalColor.a;
         float targetAlpha = 0f;
-        float elapsedTime = 0f;
-
-        while (elapsedTime < fadeDuration)
-        {
-            elapsedTime += Time.deltaTime;
-            float newAlpha = Mathf.Lerp(startAlpha, targetAlpha, elapsedTime / fadeDuration);
-
-            planetMaterial.color = new Color(originalColor.r, originalColor.g, originalColor.b, newAlpha);
-
-            yield return null;
-        }
-
-        planetMaterial.color = new Color(originalColor.r, originalColor.g, originalColor.b, targetAlpha);
-    }
-
-    //esto no funciona porque los creo después
-    private IEnumerator AppearFromTranslucent(GameObject planet, float fadeDuration)
-    {
-        Material planetMaterial = planet.GetComponentInParent<Renderer>().material;
-        Color originalColor = planetMaterial.color;
-        float startAlpha = originalColor.a;
-        float targetAlpha = 1f;
         float elapsedTime = 0f;
 
         while (elapsedTime < fadeDuration)

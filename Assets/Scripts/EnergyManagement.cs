@@ -18,13 +18,12 @@ public class EnergyManagement : MonoBehaviour
     public bool companionExist;
 
     [Header("UI")]
-    [SerializeField] Slider energySlider;
+    public Slider energySlider;
     [SerializeField] TextMeshProUGUI energyText;
     [SerializeField] Image fillImageSlider;
 
     PlanetInteraction planetInteraction;
     PlayerMovement playerMovement;
-    CompanionInteraction companionInteraction;
     [SerializeField] PlanetController planetController;
 
 
@@ -32,7 +31,6 @@ public class EnergyManagement : MonoBehaviour
     {
         planetInteraction = GetComponent<PlanetInteraction>();
         playerMovement = GetComponent<PlayerMovement>();
-        companionInteraction = GetComponent<CompanionInteraction>();
     }
     private void Start()
     {
@@ -42,7 +40,7 @@ public class EnergyManagement : MonoBehaviour
     private void Update()
     {
         Energy();
-        energyText.text = "Energy -> " + (int)currentEnergy;
+        //energyText.text = "Energy -> " + (int)currentEnergy;
         energySlider.value = currentEnergy;
 
     }
@@ -64,10 +62,9 @@ public class EnergyManagement : MonoBehaviour
 
             }
 
-            //INVOKED TODO BIEN???????????
             else if (currentEnergy <= 0 && !planetController.isInvoked)
             {
-                //GameManager.instanciate.GameOver();
+                GameManager.instanciate.GameOver();
                 Debug.Log("It's game over.");
             }
             else if (currentEnergy <= 0 && planetController.isInvoked)
@@ -78,7 +75,10 @@ public class EnergyManagement : MonoBehaviour
                     companionExist = true;
                     planetController.SpawnCompanion();
                     energyRate = 0;
-                    //IMPORTANTE
+                }
+                else
+                {
+                    StartCoroutine(DecreaseEnergy());
                 }
             }
         }

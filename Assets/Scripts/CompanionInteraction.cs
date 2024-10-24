@@ -7,14 +7,10 @@ public class CompanionInteraction : MonoBehaviour
     public bool isCollidingCompanion = false;
     private GameObject companion;
     EnergyManagement energyManagement;
-    PlanetInteraction planetInteracion;
-    PlayerMovement playerMovement;
 
     private void Awake()
     {
         energyManagement = GetComponent<EnergyManagement>();
-        planetInteracion = GetComponent<PlanetInteraction>();
-        playerMovement = GetComponent<PlayerMovement>();
     }
 
     private void Update()

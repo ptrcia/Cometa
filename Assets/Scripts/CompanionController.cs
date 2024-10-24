@@ -6,7 +6,6 @@ using UnityEngine;
 
 public class CompanionController : MonoBehaviour
 {
-
     [SerializeField] float smoothSpeed  = 0.3f;
 
     private GameObject player;

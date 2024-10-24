@@ -1,5 +1,4 @@
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UIElements;
@@ -11,8 +10,13 @@ public class GameManager : MonoBehaviour
     [Header("Player Settings")]
     [SerializeField] GameObject player;
     [SerializeField] Camera gameCamera;
-    [SerializeField] Camera menuCamera;
+    //[SerializeField] Camera menuCamera;
+    [SerializeField] GameObject canvasInGame;
     PlanetController planetController;
+    PlayerMovement playerMovement;
+    CameraFollow cameraFollow;
+    [SerializeField] AudioClip ambientSpace;
+
 
     [Header("Main Menu")]
     [SerializeField] GameObject MainMenuCanvas;
@@ -20,15 +24,19 @@ public class GameManager : MonoBehaviour
     [Header("Pause Menu")]
     [SerializeField] GameObject pauseCanvas;
 
-    [Header("Game Over Menu")]
-    [SerializeField] GameObject panelFading;
-    [Header("End Game Menu")]
+    [Header("Final Act Menu")]
+    [SerializeField] GameObject toContinueCanvas;
+    [SerializeField] AudioClip hospital;
+    private bool finalAct;
 
+    [Header("End Game")]
+    [SerializeField] GameObject gameOverCanvas;
 
-    EnergyManagement energyManagement;
 
     private void Awake()
     {
+        finalAct = false;
+        DontDestroyOnLoad(gameObject);
         if(instanciate == null)
         {
             instanciate = this;
@@ -39,9 +47,9 @@ public class GameManager : MonoBehaviour
             Destroy(gameObject);
         }
 
-        energyManagement = player.GetComponent<EnergyManagement>();  
         planetController = player.GetComponent<PlanetController>();
-        gameCamera = Camera.main;
+        playerMovement = player.GetComponent<PlayerMovement>();
+        cameraFollow = Camera.main.GetComponent<CameraFollow>();
     }
     private void Start()
     {
@@ -62,22 +70,36 @@ public class GameManager : MonoBehaviour
                 PauseGame();
             }
         }
+
+        if(finalAct && Input.GetKeyDown(KeyCode.A))
+        {
+            Debug.Log("Ha pulsado la A");
+            SceneManager.LoadScene(1);
+            AudioManager.instance.PlayMusic(hospital);
+        }
+
+    }
+
+    public void FinalAct()
+    {
+        finalAct=true;
+        StartCoroutine(PauseBeforeAction(2));
     }
 
     public void SetUp()
     {
         MainMenuCanvas.SetActive(true);
-        planetController.enabled = false;
-        menuCamera.enabled = true;
-        gameCamera.enabled = false;
+        playerMovement.enabled = false;
+       cameraFollow.enabled = false;
     }
 
     public void PlayGame()
     {
         MainMenuCanvas.SetActive(false);
-        planetController.enabled = true;
-        menuCamera.enabled= false;
-        gameCamera.enabled = true;
+        playerMovement.enabled = true;
+        canvasInGame.SetActive(true);
+        cameraFollow.enabled = true;
+        
     }
     public void PauseGame()
     {
@@ -89,47 +111,34 @@ public class GameManager : MonoBehaviour
         pauseCanvas.SetActive(false);
         Time.timeScale = 1;
     }
-    public void EndGame()
-    {
-
-    }
 
     public void GameOver()
     {
-        Debug.Log("Energy is empty");
-        
-        StartCoroutine(FadingPanel(5)); //comprobar que funciona
-        //UI texto y boton
+        gameOverCanvas.SetActive(true);
+        AudioManager.instance.PlayMusic(null);
+
     }
     public void ExitGame()
     {
+        PauseGame();
         Application.Quit();
+        Debug.Log("Quitting...");
+
     }
 
+    public void ChangeScene(int scene)
+    {
+        SceneManager.LoadScene(scene);
+    }
     public void URL(string url)
     {
         Application.OpenURL(url);
     }
 
-    IEnumerator FadingPanel(float fadeDuration)
+    IEnumerator PauseBeforeAction(float seconds)
     {
-        panelFading.SetActive(true);
+        yield return new WaitForSeconds(seconds);
+        toContinueCanvas.SetActive(true);
 
-        Color originalColor = panelFading.GetComponent<Image>().tintColor;
-        float startAlpha = originalColor.a;
-        float targetAlpha = 250f;
-        float elapsedTime = 0f;
-
-        while (elapsedTime < fadeDuration)
-        {
-            elapsedTime += Time.deltaTime;
-            float newAlpha = Mathf.Lerp(startAlpha, targetAlpha, elapsedTime / fadeDuration);
-
-            panelFading.GetComponent<Image>().tintColor = new Color(originalColor.r, originalColor.g, originalColor.b, newAlpha);
-
-            yield return null;
-        }
-
-        panelFading.GetComponent<Image>().tintColor = new Color(originalColor.r, originalColor.g, originalColor.b, targetAlpha);
     }
 }

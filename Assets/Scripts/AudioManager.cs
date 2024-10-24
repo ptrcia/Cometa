@@ -14,7 +14,7 @@ public class AudioManager : MonoBehaviour
     [SerializeField] Slider sliderSFX;
     [SerializeField] AudioMixer audioMixer;
     [SerializeField] AudioSource MusicSource;
-    [SerializeField] AudioSource SFXSource;
+    public AudioSource SFXSource;
 
     private void Awake()
     {
@@ -49,7 +49,7 @@ public class AudioManager : MonoBehaviour
     public void PlayMusic(AudioClip clipToPlay)
     {
         MusicSource.clip = clipToPlay;
-        MusicSource.PlayOneShot(clipToPlay);
+        MusicSource.Play();
     }
 
     #region Volume Audio
@@ -68,7 +68,11 @@ public class AudioManager : MonoBehaviour
     {
         audioMixer.SetFloat("volumeSFX", Mathf.Log10(volume) * 20);
         PlayerPrefs.SetFloat("volumeSFX", volume);
+    }
 
+    public void SetSFXVolume(float volume)
+    {
+        SFXSource.volume = Mathf.Clamp(volume, 0f, 1f); // Asegura que el volumen esté entre 0 y 1
     }
     #endregion
 }

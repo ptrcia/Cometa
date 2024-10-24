@@ -20,13 +20,15 @@ public class PlanetInteraction : MonoBehaviour
     public bool isBeingAttracted;
     //public SphereCollider destructionTrigger;
 
-    PlayerMovement playerMovement;
+   
     CameraFollow cameraFollow;
     Rigidbody rb;
+
     [Header("Managers")]
     EnergyManagement energyManagement;
     GravityField gravityField;
     ExplodeSphere explodeSphere;
+    PlayerMovement playerMovement;
     [SerializeField] PlanetGeneration planetGeneration;
     [SerializeField]PlanetController planetController;
 
@@ -79,13 +81,12 @@ public class PlanetInteraction : MonoBehaviour
         if (collision.gameObject.CompareTag("DeadlyPlanetOrbit"))
         {
             playerMovement.currentSpeed = 0;
-            Debug.Log("A EXPLOTAR");
             
+            //Aqui me ha dado un problema raro
             explodeSphere = pivotObject.transform.parent.GetComponent<ExplodeSphere>();
 
             //Explode
-            //explodeSphere.explode = true;
-
+            explodeSphere.explode = true;
         }
     }
     private void OnCollisionExit(Collision collision)
@@ -99,12 +100,15 @@ public class PlanetInteraction : MonoBehaviour
 
             pivotObject = null;
             isOrbiting = false;
+
+            holdSpace.SetActive(false);
+            releaseSpace.SetActive(false);
         }
     }
 
     private void OnTriggerEnter(Collider other)
     {
-        if (other.gameObject.CompareTag("PlanetAttractionField")) //el collider
+        if (other.gameObject.CompareTag("PlanetAttractionField")) 
         {
             pivotObject = other.gameObject;
             //Debug.Log("Player enter the gravity field of the: " + pivotObject.transform.parent.name);
@@ -119,7 +123,7 @@ public class PlanetInteraction : MonoBehaviour
         {
             isBeingAttracted = false;
         }
-        if (other.CompareTag("Planet")) //destroy planets
+        if (other.CompareTag("Planet"))
         {
             Destroy(other.gameObject);
         }
@@ -144,7 +148,6 @@ public class PlanetInteraction : MonoBehaviour
         }
         else if(pivotObject == null)
         {
-            //Debug.Log("No encuentra el pivote en el Planet Interacrion");
             return;
         }
 
@@ -168,6 +171,12 @@ public class PlanetInteraction : MonoBehaviour
                 pivotObject.transform.parent.GetComponent<Renderer>().material.color = new Color(1f, 1f, 1f, 1f);
             }
 
+        }
+        if (!isOrbiting)
+        {
+            //esto no funciona
+            holdSpace.SetActive(false);
+            releaseSpace.SetActive(false);
         }
         if (isImpulsing)
         {

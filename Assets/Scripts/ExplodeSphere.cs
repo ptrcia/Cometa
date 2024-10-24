@@ -1,22 +1,38 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class ExplodeSphere : MonoBehaviour
 {
-    [SerializeField] GameObject explosionEffect; // Asigna aquí tu sistema de partículas
-    [SerializeField] float explosionForce = 700f;
-    [SerializeField] float explosionRadius = 5f;
-    private GameObject player;
-    private GameObject companion;
-    private SphereCollider sphereCollider;
+    [Header("Boolean")]
     public bool explode;
+
+    [Header("Explosion")]
+    [SerializeField] GameObject explosionEffect; // Asigna aquí tu sistema de partículas
+    [SerializeField] GameObject companion;
+    [SerializeField] GameObject fadeOutPanel;
+    [SerializeField] AudioClip explosionClip;
+
+    private GameObject player;
+    private SphereCollider sphereCollider;
+    private int impulseForce = 70;
+
+    MeshRenderer meshRenderer;
+    Rigidbody playerRb;
+    PlayerMovement playerMovement;
+    EnergyManagement energyManagement;
 
     private void Awake()
     {
         explode = false;
+        meshRenderer = GetComponent<MeshRenderer>();
         player = GameObject.FindGameObjectWithTag("Player");
+        playerRb = player.GetComponent<Rigidbody>();
         sphereCollider = GetComponent<SphereCollider>();
+        playerMovement = player.GetComponent<PlayerMovement>();
+        energyManagement = player.GetComponent<EnergyManagement>();
+        fadeOutPanel = Camera.main.transform.Find("Canvas").gameObject;
     }
     void Update()
     {
@@ -28,31 +44,47 @@ public class ExplodeSphere : MonoBehaviour
 
     void Explode()
     {
-        // Instanciar el efecto de explosión
+        AudioManager.instance.PlaySound(explosionClip);
+
+        // Start sfx
+        explosionEffect.SetActive(true);
         Instantiate(explosionEffect, transform.position, transform.rotation);
 
-        // Obtener todos los colliders en el radio de la explosión
-        Collider[] colliders = Physics.OverlapSphere(transform.position, explosionRadius);
-
-        foreach (Collider nearbyObject in colliders)
+        //Impulse player
+        if (playerRb != null)
         {
-            Rigidbody rb = nearbyObject.GetComponent<Rigidbody>();
-            if (rb != null)
-            {
-                rb.AddExplosionForce(explosionForce, transform.position, explosionRadius);
-            }
+            Vector3 forceDirection = transform.forward;
+            playerRb.AddForce(forceDirection * impulseForce, ForceMode.Impulse);
+            playerMovement.currentSpeed = impulseForce;
         }
 
-        
-        Destroy(gameObject);
+        playerMovement.canMove = false;
+        energyManagement.energySlider.enabled = false;        
         Destroy(companion);
-        //new positioon to player
+        DestroyAllPlanets();
 
+        meshRenderer.enabled = false;
+
+        StartCoroutine(PauseBeforeAction(3f));
+      
     }
-    private void OnDrawGizmos()
+
+
+    void DestroyAllPlanets()
     {
-        Gizmos.color = Color.yellow;
-        Gizmos.DrawWireSphere(transform.position, sphereCollider.radius*10);
+        GameObject[] planets = GameObject.FindGameObjectsWithTag("Planet");
+
+        foreach (GameObject planet in planets)
+        {
+            Destroy(planet);
+        }
+    }
+    IEnumerator PauseBeforeAction(float seconds)
+    {
+        yield return new WaitForSeconds(seconds);
+        //sonar audios de paso 
+        fadeOutPanel.SetActive(true);
+        GameManager.instanciate.FinalAct();
     }
 
 }
