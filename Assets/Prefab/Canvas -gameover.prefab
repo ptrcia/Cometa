@@ -65,7 +65,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Main Menu
+  m_text: "Men\xFA"
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 0a238aa112fcb0a4fbec9b625502508e, type: 2}
   m_sharedMaterial: {fileID: -397246142111363637, guid: 0a238aa112fcb0a4fbec9b625502508e,
@@ -528,7 +528,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Exit
+  m_text: Salir
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 0a238aa112fcb0a4fbec9b625502508e, type: 2}
   m_sharedMaterial: {fileID: -397246142111363637, guid: 0a238aa112fcb0a4fbec9b625502508e,
