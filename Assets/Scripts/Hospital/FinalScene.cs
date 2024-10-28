@@ -15,8 +15,7 @@ public class FinalScene : MonoBehaviour
     [SerializeField] TMP_FontAsset fontPlaywrite;
 
     [Header("Images")]
-    [SerializeField] GameObject imgBackgroundConsole;
-    [SerializeField] GameObject imgCometa;
+    [SerializeField] GameObject newScene;
     [SerializeField] GameObject panelCredits;
 
     [Header("Animations")]
@@ -26,7 +25,9 @@ public class FinalScene : MonoBehaviour
     [SerializeField] Animator animCameraIn;
 
     [Header("Audio")]
+    [SerializeField] AudioSource source;
     [SerializeField] AudioClip steps;
+    [SerializeField] AudioClip door;
 
     bool isPressed = false;
     bool canPress = false;
@@ -81,8 +82,10 @@ public class FinalScene : MonoBehaviour
         yield return new WaitForSeconds(1);
 
         Debug.Log("Pasos");
-        //AudioManager.instance.PlaySound(steps);
-        yield return new WaitForSeconds(2);
+        source.PlayOneShot(steps);
+        yield return new WaitForSeconds(3);
+        source.PlayOneShot(door);
+        yield return new WaitForSeconds(0.5f);
 
         Debug.Log("Dentro");
 
@@ -95,10 +98,9 @@ public class FinalScene : MonoBehaviour
             animCameraIn.Play("CameraIn");
         }
 
-        imgBackgroundConsole.SetActive(true);
-        imgCometa.SetActive(true);
+        newScene.SetActive(true);
 
-        yield return new WaitForSeconds(4);
+        yield return new WaitForSeconds(5);
         panelCredits.SetActive(true);
         StartCoroutine(ChangeText());
 
@@ -109,17 +111,21 @@ public class FinalScene : MonoBehaviour
         credits.fontSize = 60;
         credits.font = fontPlaywrite;
         credits.text = "Cometa";
-        yield return new WaitForSeconds(2);
+        yield return new WaitForSeconds(5);
         credits.fontSize = 50;
         credits.text = "Patricia S. Gracia Artero\n2024";
         credits.font = fontDelius;
-        yield return new WaitForSeconds(2);
+        yield return new WaitForSeconds(5);
         credits.fontSize = 40;
-        credits.text = "Thank you for playing!";
+        credits.text = "Todos los recursos utilizados y más informacion en Itch.io y Github";
+        yield return new WaitForSeconds(5);
+        credits.text = "Gracias a Stega Academy y a mis compañeros";
+        yield return new WaitForSeconds(8);
+        credits.text = "¡Gracias por jugar!";
 
 
         isEnded = true;
-        button.SetActive(false);
+        button.SetActive(true);
 
     }
 }

@@ -26,7 +26,7 @@ public class AudioManager : MonoBehaviour
         {
             Destroy(gameObject);
         }
-        DontDestroyOnLoad(gameObject);
+        DontDestroyOnLoad(this.gameObject);
 
         sliderMusic.onValueChanged.AddListener(volumeMusic);
         sliderMaster.onValueChanged.AddListener(volumeMaster);

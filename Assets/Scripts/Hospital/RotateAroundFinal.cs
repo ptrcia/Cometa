@@ -1,18 +1,19 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 
-public class RotateAroundPoint : MonoBehaviour
+public class RotateAroundFinal : MonoBehaviour
 {
-    [SerializeField] public float rotationSpeed; 
-    [SerializeField] public GameObject pivotObject;
+    [SerializeField]  float rotationSpeed;
+    [SerializeField]  GameObject pivotObject;
 
     private Vector3 randomAxis;
 
     private void Start()
     {
-        rotationSpeed = Random.Range(20, 50);
-        randomAxis = Random.onUnitSphere;
+        randomAxis = new Vector3(0, 0,1);
+        //randomAxis = Random.onUnitSphere;
     }
 
     private void Update()
