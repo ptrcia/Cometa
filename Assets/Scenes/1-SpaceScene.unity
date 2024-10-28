@@ -3675,9 +3675,15 @@ MonoBehaviour:
   generatedPlanets: []
   spheres: []
   matsPlanets:
-  - {fileID: 2100000, guid: 170c83ede85caf74794b594979664086, type: 2}
-  - {fileID: 2100000, guid: 170c83ede85caf74794b594979664086, type: 2}
-  - {fileID: 2100000, guid: 71ed50584b371d04d991cb62784dceb6, type: 2}
+  - {fileID: 2100000, guid: 4ed18ce84be205042afa369f5ad63cd9, type: 2}
+  - {fileID: 2100000, guid: 4df069dd7756fff4bb0e77111fa93418, type: 2}
+  - {fileID: 2100000, guid: 229c627bc5d315647a4afd262e6cba22, type: 2}
+  - {fileID: 2100000, guid: 151e808abacb58241baa943c4560eee6, type: 2}
+  - {fileID: 2100000, guid: 74fe8959dba32174dac1aedebc162f33, type: 2}
+  - {fileID: 2100000, guid: 2dd9cd1e3f585c24aa8db6608880b73e, type: 2}
+  - {fileID: 2100000, guid: 9087c736bb19703409d4de2f853e4373, type: 2}
+  - {fileID: 2100000, guid: 72ae5cd53454fa44b8a5e3fa5c6df0a4, type: 2}
+  - {fileID: 2100000, guid: bbf57e78fac632540a44633c837f17cc, type: 2}
   matsSatellites:
   - {fileID: 2100000, guid: 71ed50584b371d04d991cb62784dceb6, type: 2}
   - {fileID: 2100000, guid: 2661c33084114f644bf58562f9a314c9, type: 2}
@@ -4546,7 +4552,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 170c83ede85caf74794b594979664086, type: 2}
+  - {fileID: 2100000, guid: 4df069dd7756fff4bb0e77111fa93418, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -4584,7 +4590,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1207357964}
   serializedVersion: 2
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalRotation: {x: -0, y: -0.38628227, z: -0, w: 0.9223807}
   m_LocalPosition: {x: -0.994, y: 0.626, z: -0.03}
   m_LocalScale: {x: 1.0749, y: 1.0749, z: 1.0749}
   m_ConstrainProportionsScale: 0
@@ -4593,7 +4599,7 @@ Transform:
   - {fileID: 1749022166}
   - {fileID: 680248711}
   m_Father: {fileID: 144154971}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: -45.447, z: 0}
 --- !u!114 &1207357969
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -8473,6 +8479,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: Player
       objectReference: {fileID: 0}
+    - target: {fileID: 1981786186011985045, guid: b08686c1e1777ea45ad636634fc9a32b,
+        type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: b485ea9a0375d34419751b4cb4512ab9, type: 2}
     - target: {fileID: 2415507675823675053, guid: b08686c1e1777ea45ad636634fc9a32b,
         type: 3}
       propertyPath: holdSpace
