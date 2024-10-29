@@ -60,22 +60,23 @@ public class PlayerMovement : MonoBehaviour
         {
             currentSpeed += acceleration * Time.fixedDeltaTime;
 
-            float targetVolume = Mathf.Lerp(AudioManager.instance.SFXSource.volume, 1f, Time.fixedDeltaTime * 2f);
+            /*float targetVolume = Mathf.Lerp(AudioManager.instance.SFXSource.volume, 1f, Time.fixedDeltaTime * 2f);
             AudioManager.instance.SetSFXVolume(targetVolume);
 
             if (!AudioManager.instance.SFXSource.isPlaying)
             {
                 AudioManager.instance.PlaySound(accelerationSound);
                 AudioManager.instance.SFXSource.loop = true;
-            }
+            }*/
 
         }
         else
         {
-            currentSpeed -= deceleration * Time.fixedDeltaTime;
+            currentSpeed -= deceleration * Time.fixedDeltaTime;         
 
+            /*
             float targetVolume = Mathf.Lerp(AudioManager.instance.SFXSource.volume, 0.3f, Time.fixedDeltaTime * 2f);
-            AudioManager.instance.SetSFXVolume(targetVolume);
+            AudioManager.instance.SetSFXVolume(targetVolume);*/
         }
 
         if (currentSpeed > maxSpeed)

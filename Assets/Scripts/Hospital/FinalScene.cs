@@ -1,9 +1,8 @@
 using System.Collections;
-using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
-using UnityEngine.TextCore.Text;
+
 
 public class FinalScene : MonoBehaviour
 {
@@ -31,11 +30,14 @@ public class FinalScene : MonoBehaviour
 
     bool isPressed = false;
     bool canPress = false;
+    private string language;
     bool isEnded = false;
 
 
     private void Start()
     {
+        language = PlayerPrefs.GetString("Language", "Spanish");
+
         StartCoroutine(SceneController());
     }
 
@@ -102,30 +104,36 @@ public class FinalScene : MonoBehaviour
 
         yield return new WaitForSeconds(5);
         panelCredits.SetActive(true);
-        StartCoroutine(ChangeText());
+        StartCoroutine(ChangeText2());
 
     }
 
-    IEnumerator ChangeText()
+    IEnumerator ChangeText2()
     {
         credits.fontSize = 60;
         credits.font = fontPlaywrite;
-        credits.text = "Cometa";
+        credits.text = language == "Spanish" ? "Cometa" : "Cometa";
         yield return new WaitForSeconds(5);
-        credits.fontSize = 50;
-        credits.text = "Patricia S. Gracia Artero\n2024";
-        credits.font = fontDelius;
-        yield return new WaitForSeconds(5);
-        credits.fontSize = 40;
-        credits.text = "Todos los recursos utilizados y más informacion en Itch.io y Github";
-        yield return new WaitForSeconds(5);
-        credits.text = "Gracias a Stega Academy y a mis compañeros";
-        yield return new WaitForSeconds(8);
-        credits.text = "¡Gracias por jugar!";
 
+        credits.fontSize = 50;
+        credits.font = fontDelius;
+        credits.text = language == "Spanish" ? "Patricia S. Gracia Artero\n2024" : "Patricia S. Gracia Artero\n2024";
+        yield return new WaitForSeconds(5);
+
+        credits.fontSize = 40;
+        credits.text = language == "Spanish"
+            ? "Todos los recursos utilizados y más información en Itch.io y Github"
+            : "All resources used and more info on Itch.io and Github";
+        yield return new WaitForSeconds(5);
+
+        credits.text = language == "Spanish"
+            ? "Gracias a Stega Academy y a mis compañeros"
+            : "Thanks to Stega Academy and my teammates";
+        yield return new WaitForSeconds(8);
+
+        credits.text = language == "Spanish" ? "¡Gracias por jugar!" : "Thank you for playing!";
 
         isEnded = true;
         button.SetActive(true);
-
     }
 }

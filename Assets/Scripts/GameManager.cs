@@ -86,7 +86,7 @@ public class GameManager : MonoBehaviour
     public void FinalAct()
     {
         finalAct=true;
-        StartCoroutine(PauseBeforeAction(6));
+        StartCoroutine(PauseBeforeAction(5));
     }
 
     public void SetUp()

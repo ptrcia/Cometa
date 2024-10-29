@@ -65,7 +65,7 @@ public class ExplodeSphere : MonoBehaviour
 
         meshRenderer.enabled = false;
 
-        StartCoroutine(PauseBeforeAction(3f));
+        StartCoroutine(PauseBeforeAction(6f));
       
     }
 

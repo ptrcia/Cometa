@@ -88,3 +88,15 @@
 [Human Model - Rex Mun]
 <https://www.blenderkit.com/asset-gallery-detail/495ecf7c-b5b2-4990-9dc6-b76049215ce5/>
 
+
+
+## [Photos:]
+
+!(https://ptrcia.github.io/porfolio/images/Cometa/cometa0.png)
+!(https://ptrcia.github.io/porfolio/images/Cometa/cometa1.png)
+!(https://ptrcia.github.io/porfolio/images/Cometa/cometa2.png)
+!(https://ptrcia.github.io/porfolio/images/Cometa/cometa3.png)
+!(https://ptrcia.github.io/porfolio/images/Cometa/cometa4.png)
+!(https://ptrcia.github.io/porfolio/images/Cometa/cometa5.png)
+!(https://ptrcia.github.io/porfolio/images/Cometa/cometa6.png)
+!(https://ptrcia.github.io/porfolio/images/Cometa/cometa7.png)

@@ -15056,7 +15056,7 @@ MonoBehaviour:
   explosionEffect: {fileID: 504243960608539090}
   companion: {fileID: 0}
   fadeOutPanel: {fileID: 0}
-  explosionClip: {fileID: 8300000, guid: f8df8ef1a7bda704fa37fcf48a2cfd73, type: 3}
+  explosionClip: {fileID: 8300000, guid: bf6faed26813ad74ab9d008f23c65612, type: 3}
 --- !u!82 &4788305686512073043
 AudioSource:
   m_ObjectHideFlags: 0
@@ -15070,7 +15070,7 @@ AudioSource:
     type: 2}
   m_audioClip: {fileID: 8300000, guid: 2879ef7b333bf414dbbe279c4e269217, type: 3}
   m_PlayOnAwake: 1
-  m_Volume: 0.8
+  m_Volume: 1
   m_Pitch: 1
   Loop: 1
   Mute: 0
@@ -15166,7 +15166,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c9ac0ab8e4ca73b438bfaa9da72a2508, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  rotationSpeed: 1
+  rotationSpeed: 10
   pivotObject: {fileID: 7149354173075995287}
   axis: {x: 0, y: 1, z: 0}
 --- !u!1 &8672860542104310872
