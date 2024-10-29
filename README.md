@@ -1,5 +1,4 @@
 # [Cometa](https://github.com/ptrcia/cometa)
-=====================================================
 
 [Created by: Patricia S. Gracia Artero](https://github.com/ptrcia/the-goose#created-by-patricia-s-gracia-artero)
 ===============================================================================================================
@@ -12,7 +11,7 @@
  A tiny game about the warmth of friendly company
 
 
-[External Resources:](https://github.com/ptrcia/cometa#external-resources)
+## [External Resources:](https://github.com/ptrcia/cometa#external-resources)
 
 ### //Textures
 
