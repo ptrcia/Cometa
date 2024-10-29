@@ -59,13 +59,16 @@ public class GameManager : MonoBehaviour
 
     private void Update()
     {
+        if (Input.GetKeyUp("1")) SceneManager.LoadScene(0);
+        if (Input.GetKeyUp("2")) SceneManager.LoadScene(1);
+
         if (Input.GetKeyDown(KeyCode.Escape))
         {
             if (pauseCanvas.activeInHierarchy)
             {              
                 ResumeGame();
             }
-            else
+            else if(!pauseCanvas.activeInHierarchy && !MainMenuCanvas.activeInHierarchy)
             {
                 PauseGame();
             }
@@ -83,7 +86,7 @@ public class GameManager : MonoBehaviour
     public void FinalAct()
     {
         finalAct=true;
-        StartCoroutine(PauseBeforeAction(2));
+        StartCoroutine(PauseBeforeAction(6));
     }
 
     public void SetUp()

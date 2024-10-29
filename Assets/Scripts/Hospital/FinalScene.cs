@@ -85,7 +85,7 @@ public class FinalScene : MonoBehaviour
         source.PlayOneShot(steps);
         yield return new WaitForSeconds(3);
         source.PlayOneShot(door);
-        yield return new WaitForSeconds(0.5f);
+        yield return new WaitForSeconds(1.5f);
 
         Debug.Log("Dentro");
 

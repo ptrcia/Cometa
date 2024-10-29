@@ -28,6 +28,7 @@ public class PlanetGeneration : MonoBehaviour
     private int planetCounter;
 
     GravityField gravityField;
+    RotateAroundFinal rotateAround;
 
     private void Awake()
     {
@@ -116,6 +117,12 @@ public class PlanetGeneration : MonoBehaviour
             gravityField.optionPlanetSize = (GravityField.planetSize)Random.Range(0, 3);
             gravityField.PlanetSize(gravityField.optionPlanetSize);
 
+            //RotateAround
+            rotateAround = sp.AddComponent<RotateAroundFinal>();
+            rotateAround.axis = new Vector3(0, 1, 0);
+            rotateAround.pivotObject = sp;
+            rotateAround.rotationSpeed = Random.Range(3, 10);
+
             //Colliders Children
             GameObject orbitSphere = new GameObject("ColliderOrbital");
             orbitSphere.transform.SetParent(sp.transform);
@@ -174,7 +181,7 @@ public class PlanetGeneration : MonoBehaviour
             //Trail
             TrailRenderer tr = satellite.AddComponent<TrailRenderer>(); //adcomponent o getcomoponent?
             tr.time = 1;
-            tr.startWidth = 0.1f;
+            //tr.startWidth = 0.1f;
             tr.endWidth = 0;
             tr.material = trailMat[Random.Range(0, trailMat.Length)];
             tr.startColor = new Color(1, 1, 0, 0.1f);

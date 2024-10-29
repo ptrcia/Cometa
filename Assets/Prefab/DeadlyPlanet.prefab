@@ -14927,6 +14927,7 @@ GameObject:
   - component: {fileID: 1370937714858075027}
   - component: {fileID: 973384376715112716}
   - component: {fileID: 4788305686512073043}
+  - component: {fileID: 7241684674269696700}
   m_Layer: 0
   m_Name: DeadlyPlanet
   m_TagString: Untagged
@@ -15153,6 +15154,21 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+--- !u!114 &7241684674269696700
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7149354173075995287}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c9ac0ab8e4ca73b438bfaa9da72a2508, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  rotationSpeed: 1
+  pivotObject: {fileID: 7149354173075995287}
+  axis: {x: 0, y: 1, z: 0}
 --- !u!1 &8672860542104310872
 GameObject:
   m_ObjectHideFlags: 0
