@@ -33,9 +33,8 @@
 [Image by rawpixel.com on Freepik]
 <https://www.freepik.com/free-photo/paper-craft-art-speech-bubble-icon_3740846.html>
 
-[Mouse Icon by designvector10​]
-
-<https://www.flaticon.com/free-icon/mouse_3249525>
+[Mouse Icon by Anjunasa Zayyan Althea Mulya​]
+<https://www.flaticon.com/free-icon/mouse_9175542>
 
 [Tiles - Michal Bračok]
 <https://www.blenderkit.com/asset-gallery-detail/1361afdc-761c-4cf8-ba57-db309cba609d/>
