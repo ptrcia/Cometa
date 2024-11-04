@@ -7,6 +7,7 @@ public class PlanetInteraction : MonoBehaviour
     [Header("Orbitation")]
     public GameObject pivotObject = null; 
     public bool isOrbiting = false; // Para saber si el jugador está en órbita
+    Vector3 axisRotation;
 
     [Header("Impulse")]
     [SerializeField] bool isImpulsing;
@@ -18,8 +19,6 @@ public class PlanetInteraction : MonoBehaviour
 
     [Header("Gravity")]
     public bool isBeingAttracted;
-    //public SphereCollider destructionTrigger;
-
    
     CameraFollow cameraFollow;
     Rigidbody rb;
@@ -58,6 +57,10 @@ public class PlanetInteraction : MonoBehaviour
     {
         if (collision.gameObject.CompareTag("PlanetOrbit"))
         {
+            Debug.Log(collision.gameObject.name);
+            
+            axisRotation = transform.TransformDirection(Vector3.up);
+
             pivotObject = collision.gameObject;
             Debug.Log("Entered collision with: " + pivotObject.transform.parent.name);
 
@@ -82,10 +85,8 @@ public class PlanetInteraction : MonoBehaviour
         {
             playerMovement.currentSpeed = 0;
             
-            //Aqui me ha dado un problema raro
             explodeSphere = pivotObject.transform.parent.GetComponent<ExplodeSphere>();
 
-            //Explode
             explodeSphere.explode = true;
         }
     }
@@ -93,6 +94,7 @@ public class PlanetInteraction : MonoBehaviour
     {
         if (collision.gameObject.CompareTag("PlanetOrbit"))
         {
+
             //Debug.Log("Exit collision with: " + collision.gameObject.name);
 
             cameraFollow.objectToFollow = this.gameObject;
@@ -123,10 +125,12 @@ public class PlanetInteraction : MonoBehaviour
         {
             isBeingAttracted = false;
         }
-        if (other.CompareTag("Planet"))
+
+        //PENSAR
+        /*if (other.CompareTag("Planet"))
         {
             Destroy(other.gameObject);
-        }
+        }*/
     }
     private void FixedUpdate()
     {
@@ -140,11 +144,15 @@ public class PlanetInteraction : MonoBehaviour
     {
         if (isOrbiting && pivotObject != null)
         {
-            //Debug.Log("Pivote: "+ pivotObject.name + " del " + pivotObject.transform.parent.name);
+            /* transform.RotateAround(pivotObject.transform.position, randomAxis,
+                 (pivotObject.transform.parent.GetComponent<GravityField>().rotationSpeed
+                 + playerMovement.currentSpeed) * Time.deltaTime);*/
 
-            transform.RotateAround(pivotObject.transform.position, randomAxis,
-                (pivotObject.transform.parent.GetComponent<GravityField>().rotationSpeed
-                + playerMovement.currentSpeed) * Time.deltaTime);
+
+            transform.RotateAround(pivotObject.transform.position, transform.TransformDirection(Vector3.up),
+                 (pivotObject.transform.parent.GetComponent<GravityField>().rotationSpeed
+                 + playerMovement.currentSpeed) * Time.deltaTime);
+
         }
         else if(pivotObject == null)
         {
@@ -174,7 +182,6 @@ public class PlanetInteraction : MonoBehaviour
         }
         if (!isOrbiting)
         {
-            //esto no funciona
             holdSpace.SetActive(false);
             releaseSpace.SetActive(false);
         }
@@ -210,20 +217,22 @@ public class PlanetInteraction : MonoBehaviour
     {
         if(pivotObject != null)
         {
-            Vector3 directionToPlanet = pivotObject.transform.position - transform.position;
+            Vector3 directionToPlanet = pivotObject.transform.position - transform.position; //coger del trigger el valor del gavityt
+            Vector3 desiredDirection = (playerMovement.GetVelocityVector().normalized + (directionToPlanet.normalized * pivotObject.transform.parent.GetComponent<GravityField>().gravity)) * Time.fixedDeltaTime;
             directionToPlanet.Normalize(); 
+        
 
             // Aplicar una fuerza
 
-            rb.AddForce(directionToPlanet * 
+            /*rb.AddForce(directionToPlanet * 
                 (pivotObject.transform.parent.GetComponent<GravityField>().gravity) * 
-                Time.fixedDeltaTime, ForceMode.Acceleration);
-            //Debug.Log(pivotObject.transform.parent);
-            //Debug.Log(pivotObject.transform.parent.GetComponent<GravityField>().gravity);
+                Time.fixedDeltaTime, ForceMode.Acceleration);*/
+            rb.AddForce(desiredDirection, ForceMode.Acceleration);
+
         }
         else
         {
-            Debug.Log("Mira me cago en dios");
+            Debug.Log(":)");
         }
         
     }

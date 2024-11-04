@@ -18,6 +18,7 @@ public class TranslatorScene0 : MonoBehaviour
     [SerializeField] TextMeshProUGUI accelerate;
     [SerializeField] TextMeshProUGUI prepareImpulse;
     [SerializeField] TextMeshProUGUI impulse;
+    [SerializeField] TextMeshProUGUI mouse;
 
     [Header("Audio")]
     [SerializeField] TextMeshProUGUI audioText;
@@ -60,6 +61,7 @@ public class TranslatorScene0 : MonoBehaviour
         accelerate.text = "Acelerar   ->    W";
         prepareImpulse.text = "Prepara impulso en órbita -> mantener espacio";
         impulse.text = "Impulsar -> Soltar espacio";
+        mouse.text = "Rotar -> mover Ratón";
 
         audioText.text = "Máster" + "\n" + "\n" + "Musica" + "\n" + "\n" + "Efectos especiales";
 
@@ -92,6 +94,7 @@ public class TranslatorScene0 : MonoBehaviour
         accelerate.text = "Accelerate->   W";
         prepareImpulse.text = "Prepare orbital thrust -> hold space";
         impulse.text = "Impulse -> Release space";
+        mouse.text = "Rotate -> move Mouse";
 
         audioText.text = "Master" + "\n" +"\n" + "Music" + "\n"+ "\n" + "Sound Effects";
 

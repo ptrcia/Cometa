@@ -88,9 +88,13 @@ public class PlayerMovement : MonoBehaviour
             currentSpeed = 0;
         }
 
-    Vector3 velocity = transform.forward * currentSpeed;
+        Vector3 velocity = transform.forward * currentSpeed;
 
         GetComponent<Rigidbody>().velocity = velocity;
+    }
+    public Vector3 GetVelocityVector()
+    {
+        return transform.forward * currentSpeed;
     }
 
     private void RotateView()

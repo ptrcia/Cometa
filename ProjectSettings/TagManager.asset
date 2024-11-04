@@ -12,6 +12,7 @@ TagManager:
   - Companion
   - DeadlyPlanetOrbit
   - FadeOutPanel
+  - PivotCompanion
   layers:
   - Default
   - TransparentFX

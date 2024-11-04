@@ -38,14 +38,14 @@ public class PlanetController : MonoBehaviour
     [SerializeField] EnergyManagement energyManagement;
     PlanetInteraction planetInteraction;
 
-    private SphereCollider sphereColliderPlayer;
+    //private SphereCollider sphereColliderPlayer;
     private bool nameIsDifferent;
     private GameObject currentPlanet; // Planet currently being orbited
 
     private void Awake()
     {
         planetInteraction = player.GetComponent<PlanetInteraction>();
-        sphereColliderPlayer = player.GetComponent<SphereCollider>();
+        //sphereColliderPlayer = player.GetComponent<SphereCollider>();
         player = GameObject.FindGameObjectWithTag("Player");
         isInvoked = false;
         firstActEnded = false;
@@ -85,7 +85,7 @@ public class PlanetController : MonoBehaviour
     {
         if (!isCountingEnabled)
         {
-            return planetsOrbited.Count; // Si no está habilitado el conteo, simplemente retornamos el conteo actual sin hacer nada.
+            return planetsOrbited.Count;
         }
         nameIsDifferent = true;
 
@@ -106,10 +106,7 @@ public class PlanetController : MonoBehaviour
 
                 continue;
             }
-            /* if (obj.name == "SpecialPlanetFirstAct")
-             {
-                 continue;
-             }*/
+
             if (obj == currentPlanet)
             {
                 nameIsDifferent = false;
@@ -121,8 +118,6 @@ public class PlanetController : MonoBehaviour
         {
             planetsOrbited.Add(currentPlanet);
         }
-
-        //text.text = "Planet count -> " + planetsOrbited.Count;
 
         return planetsOrbited.Count;
     }
@@ -179,7 +174,6 @@ public class PlanetController : MonoBehaviour
     {
 
         //Special Planet will be kept out of reach until the companion came.
-        specialPlanet = Instantiate(specialPlanetFirstAct);
 
         if (specialPlanet == null) 
         {
@@ -195,11 +189,11 @@ public class PlanetController : MonoBehaviour
                 specialPlanet.transform.position = lastPosition;
             }
         }
+
     }
 
     public void GenerateDeathlyPlanet()
     {
-        deadlyPlanet = Instantiate(deadlyPlanetSecondAct);
 
         if (deadlyPlanet == null) 
         {
