@@ -3566,7 +3566,7 @@ MonoBehaviour:
   text: {fileID: 1903925026}
   planetsOrbited: []
   isCountingEnabled: 1
-  firstAct: 2
+  firstAct: 3
   isLost: 0
   isInvoked: 0
   specialPlanetFirstAct: {fileID: 7149354173075995287, guid: 12d79589fe3e48b4da0a7a3034ef0a38,
@@ -3576,7 +3576,7 @@ MonoBehaviour:
     type: 3}
   distanceMaintainSpecialPlanet: 800
   firstActEnded: 0
-  secondAct: 3
+  secondAct: 5
   secondActPrepared: 0
   isInvokedDeadly: 0
   deadlyPlanetSecondAct: {fileID: 7149354173075995287, guid: ff22b4e3ccfa3234da40a14e0f7c9437,
@@ -10069,6 +10069,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Enabled
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2672784467128536894, guid: b08686c1e1777ea45ad636634fc9a32b,
+        type: 3}
+      propertyPath: extraEnergy
+      value: 150
       objectReference: {fileID: 0}
     - target: {fileID: 2819073094755554258, guid: b08686c1e1777ea45ad636634fc9a32b,
         type: 3}

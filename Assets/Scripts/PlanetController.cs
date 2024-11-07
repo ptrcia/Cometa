@@ -50,7 +50,7 @@ public class PlanetController : MonoBehaviour
         isInvoked = false;
         firstActEnded = false;
         secondActPrepared = false;
-        secondAct = 3;
+        //secondAct = 3;
         isInvokedDeadly = false;
     }
 
