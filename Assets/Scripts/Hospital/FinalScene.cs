@@ -17,11 +17,27 @@ public class FinalScene : MonoBehaviour
     [SerializeField] GameObject newScene;
     [SerializeField] GameObject panelCredits;
 
+    [Header("Footsteps")]
+    [SerializeField] GameObject footstep1;
+    [SerializeField] GameObject footstep2;
+    [SerializeField] GameObject footstep3;
+    [SerializeField] GameObject footstep4;
+    [SerializeField] GameObject footstep5;
+    [SerializeField] GameObject footstep6;
+    [SerializeField] GameObject footstep7;
+    [SerializeField] GameObject footstep8;
+    [SerializeField] GameObject footstep9;
+    [SerializeField] GameObject footstep10;
+    [SerializeField] GameObject footstep11;
+    [SerializeField] GameObject footstep12;
+
+
     [Header("Animations")]
     [SerializeField] Animator animOut;
     [SerializeField] Animator animIn;
     [SerializeField] Animator animCameraOut;
     [SerializeField] Animator animCameraIn;
+    [SerializeField] Animator doorAnim;
 
     [Header("Audio")]
     [SerializeField] AudioSource source;
@@ -39,6 +55,7 @@ public class FinalScene : MonoBehaviour
         language = PlayerPrefs.GetString("Language", "Spanish");
 
         StartCoroutine(SceneController());
+        doorAnim.enabled = false;
     }
 
     private void Update()
@@ -58,24 +75,15 @@ public class FinalScene : MonoBehaviour
         Debug.Log("Fuera");
         dialogue.SetActive(true);
 
-        if (animOut != null)
-        {
-            animOut.Play("ConsoleOut");
-        }
-
-        if (animCameraOut != null)
-        {
-            animCameraOut.Play("CameraOut");
-        }
+        if (animOut != null)animOut.Play("ConsoleOut");
+        if (animCameraOut != null)animCameraOut.Play("CameraOut");
 
         dialogue.SetActive(true);
         yield return new WaitForSeconds(5);
         button.SetActive(true);
         canPress = true;
-        while (!isPressed)
-        {
-            yield return null;
-        }
+        while (!isPressed) yield return null;
+
 
         Debug.Log("Ha pulsado la A");
         button.SetActive(false);
@@ -85,20 +93,55 @@ public class FinalScene : MonoBehaviour
 
         Debug.Log("Pasos");
         source.PlayOneShot(steps);
-        yield return new WaitForSeconds(3);
+
+        #region Steps
+        footstep1.SetActive(true);
+        yield return new WaitForSeconds(0.5f);
+        footstep1.SetActive(false);
+        footstep2.SetActive(true);
+        yield return new WaitForSeconds(0.5f);
+        footstep2.SetActive(false);
+        footstep3.SetActive(true);
+        yield return new WaitForSeconds(0.5f);
+        footstep3.SetActive(false);
+        footstep4.SetActive(true);
+        yield return new WaitForSeconds(0.5f);
+        footstep4.SetActive(false);
+        footstep5.SetActive(true);
+        yield return new WaitForSeconds(0.5f);
+        footstep5.SetActive(false);
+        footstep6.SetActive(true);
+        yield return new WaitForSeconds(0.5f);
+        footstep6.SetActive(false);
+        footstep7.SetActive(true);
+        yield return new WaitForSeconds(0.5f);
+        footstep7.SetActive(false);
+        footstep8.SetActive(true);
+        yield return new WaitForSeconds(0.5f);
+        footstep8.SetActive(false);
+        footstep9.SetActive(true);
+        yield return new WaitForSeconds(0.5f);
+        footstep9.SetActive(false);
+        footstep10.SetActive(true);
+        yield return new WaitForSeconds(0.5f);
+        footstep10.SetActive(false);
+        footstep11.SetActive(true);
+        yield return new WaitForSeconds(0.5f);
+        footstep11.SetActive(false);
+        footstep12.SetActive(true);
+        yield return new WaitForSeconds(0.5f);
+        footstep12.SetActive(false);
+        #endregion
+
+        yield return new WaitForSeconds(0.5f);
         source.PlayOneShot(door);
-        yield return new WaitForSeconds(1.5f);
+        doorAnim.enabled = true; //animaicon de abrir
+        yield return new WaitForSeconds(2.5f);
 
         Debug.Log("Dentro");
 
-        if (animIn != null)
-        {
-            animIn.Play("ConsoleIn");
-        }
-        if (animCameraIn != null)
-        {
-            animCameraIn.Play("CameraIn");
-        }
+        if (animIn != null)animIn.Play("ConsoleIn");
+        if (animCameraIn != null)animCameraIn.Play("CameraIn");
 
         newScene.SetActive(true);
 

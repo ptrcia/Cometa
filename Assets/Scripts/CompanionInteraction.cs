@@ -5,6 +5,7 @@ using UnityEngine;
 public class CompanionInteraction : MonoBehaviour
 {
     public bool isCollidingCompanion = false;
+    public int extraEnergy;
     private GameObject companion;
     EnergyManagement energyManagement;
 
@@ -48,7 +49,7 @@ public class CompanionInteraction : MonoBehaviour
         {
             if (energyManagement.currentEnergy < energyManagement.maxEnergy)
             {
-                energyManagement.currentEnergy += 100 * Time.deltaTime;
+                energyManagement.currentEnergy += extraEnergy * Time.deltaTime;
 
                 if (energyManagement.currentEnergy >= energyManagement.maxEnergy)
                 {

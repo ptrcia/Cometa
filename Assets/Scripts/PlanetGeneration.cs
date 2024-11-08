@@ -104,7 +104,7 @@ public class PlanetGeneration : MonoBehaviour
             sp.transform.position = newPosition;
 
             //Scale
-            sp.transform.localScale *= Random.Range(5, 20);
+            sp.transform.localScale *= Random.Range(10, 25);
 
             //Collider
             SphereCollider collider = sp.GetComponent<SphereCollider>();
@@ -132,7 +132,9 @@ public class PlanetGeneration : MonoBehaviour
             orbitSphere.tag = "PlanetOrbit";
             SphereCollider colliderOrbit = orbitSphere.AddComponent<SphereCollider>();
             colliderOrbit.isTrigger = false;
-            colliderOrbit.radius = Random.Range(collider.radius +10, collider.radius +20);
+            //colliderOrbit.radius = Random.Range(collider.radius +10, collider.radius +20);
+            colliderOrbit.radius = (collider.radius * sp.transform.localScale.x) + Random.Range(10, 20);
+
 
 
             GameObject attractionSphere = new GameObject("ColliderAtraction");
@@ -142,7 +144,9 @@ public class PlanetGeneration : MonoBehaviour
             attractionSphere.tag = "PlanetAttractionField";
             SphereCollider colliderAtraction = attractionSphere.AddComponent<SphereCollider>();
             colliderAtraction.isTrigger = true;
-            colliderAtraction.radius = Random.Range(collider.radius + 30, collider.radius + 60);     
+            //colliderAtraction.radius = Random.Range(collider.radius + 30, collider.radius + 60);
+            colliderAtraction.radius = (collider.radius * sp.transform.localScale.x) + Random.Range(30, 60);
+
 
 
 
